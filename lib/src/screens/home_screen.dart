@@ -1,83 +1,59 @@
 import 'package:surf/src/components/header.dart';
+import 'package:surf/src/screens/spot_details.dart';
 import 'package:surf/src/services/api_service.dart';
 import 'package:surf/src/components/text_input.dart';
 
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:surf/src/theme/theme.dart';
 import 'package:surf/src/models/api_response.dart';
-import 'package:surf/src/screens/home_screen.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'Surf with me',
-        theme: ThemeStyle.lightTheme,
-        home: HomeScreen(),
-      ),
-    );
-  }
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
-  var favorites = <WordPair>[];
+class _HomeScreenState extends State<HomeScreen> {
+  int _counter = 0;
   var suggests = <SuggestOption>[];
+  final searchController = TextEditingController();
 
-  void getNext() {
-    current = WordPair.random();
-    notifyListeners();
+  void _incrementCounter() {
+    setState(() {
+      _counter += 1;
+    });
   }
 
-  void onPressFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
-    } else {
-      favorites.add(current);
-    }
-
-    notifyListeners();
-  }
-
-  void onSearch(String value) async {
+  void _onSearch(String value) async {
     final apiService = ApiService(endpoint: 'toto');
     try {
-      suggests = await apiService.searchSpot(value);
-      notifyListeners();
+      var response = await apiService.searchSpot(value);
+      print(response);
+      setState(() {
+        suggests = response;
+      });
     } catch (error) {
       print(error);
     }
   }
-}
-/*
-class MyHomePage extends StatelessWidget {
-  int _counter = 0;
-  final searchController = TextEditingController();
 
-  void _incrementCounter() {}
+  void _onNavigateToSpotDetailsSreen(SuggestOption suggestOption) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => SpotDetailsScreen(spotId: suggestOption.id)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var suggests = appState.suggests;
-
     return SafeArea(
       child: Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Header(title: 'Welcome'),
+              const Header(title: 'Welcome man'),
               Padding(
                 padding: const EdgeInsets.only(left: 24, right: 24),
                 child: Textinput(
@@ -89,7 +65,7 @@ class MyHomePage extends StatelessWidget {
                     obscureText: false,
                     onChanged: (val) {
                       if (val != null) {
-                        appState.onSearch(val);
+                        _onSearch(val);
                       }
 
                       return null;
@@ -110,6 +86,7 @@ class MyHomePage extends StatelessWidget {
                       title: Text(suggestOption.text),
                       subtitle: Text(suggestOption.type),
                       onTap: () {
+                        _onNavigateToSpotDetailsSreen(suggestOption);
                         print('Option sélectionnée: $suggestOption');
                       },
                     );
@@ -128,4 +105,3 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-*/

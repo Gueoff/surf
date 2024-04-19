@@ -5,9 +5,7 @@ import 'dart:convert';
 class ApiService {
   final String endpoint;
 
-  const ApiService({
-    required this.endpoint,
-  });
+  ApiService({required this.endpoint});
 
   Future<List<SuggestOption>> searchSpot(String spot) async {
     final response = await http.get(Uri.parse(

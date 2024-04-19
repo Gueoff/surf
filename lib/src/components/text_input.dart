@@ -36,6 +36,7 @@ class Textinput extends StatelessWidget {
       keyboardType: keyboardType,
       focusNode: focusNode,
       onTap: onTap,
+      style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
       textInputAction: TextInputAction.next,
       onChanged: onChanged,
       decoration: InputDecoration(
