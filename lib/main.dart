@@ -1,6 +1,4 @@
-import 'package:surf/src/components/header.dart';
 import 'package:surf/src/services/api_service.dart';
-import 'package:surf/src/components/text_input.dart';
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
@@ -59,73 +57,3 @@ class MyAppState extends ChangeNotifier {
     }
   }
 }
-/*
-class MyHomePage extends StatelessWidget {
-  int _counter = 0;
-  final searchController = TextEditingController();
-
-  void _incrementCounter() {}
-
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var suggests = appState.suggests;
-
-    return SafeArea(
-      child: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Header(title: 'Welcome'),
-              Padding(
-                padding: const EdgeInsets.only(left: 24, right: 24),
-                child: Textinput(
-                    controller: searchController,
-                    hintText: 'Location',
-                    keyboardType: TextInputType.text,
-                    prefixIcon: Icon(Icons.search,
-                        color: Theme.of(context).colorScheme.tertiary),
-                    obscureText: false,
-                    onChanged: (val) {
-                      if (val != null) {
-                        appState.onSearch(val);
-                      }
-
-                      return null;
-                    },
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return 'Please fill in this field';
-                      }
-                      return null;
-                    }),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: suggests.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final suggestOption = suggests[index];
-                    return ListTile(
-                      title: Text(suggestOption.text),
-                      subtitle: Text(suggestOption.type),
-                      onTap: () {
-                        print('Option sélectionnée: $suggestOption');
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
-        ),
-      ),
-    );
-  }
-}
-*/

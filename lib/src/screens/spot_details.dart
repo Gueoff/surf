@@ -9,11 +9,13 @@ class SpotDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SafeArea(
-      child: Column(
-        children: [
-          BackButton(),
-          Header(title: 'Welcome man'),
-        ],
+      child: Scaffold(
+        body: Column(
+          children: [
+            BackButton(),
+            Header(title: 'Welcome man'),
+          ],
+        ),
       ),
     );
   }

@@ -32,12 +32,18 @@ class ThemeStyle {
       titleLarge: GoogleFonts.niramit(
           color: const Color.fromRGBO(2, 66, 102, 1),
           fontSize: 22,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w700,
           letterSpacing: 0.15),
       titleMedium: GoogleFonts.niramit(
-          fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.15),
+          color: const Color.fromRGBO(2, 66, 102, 1),
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.15),
       titleSmall: GoogleFonts.niramit(
-          fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1),
+          color: const Color.fromRGBO(2, 66, 102, 1),
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          letterSpacing: 0.1),
       bodyLarge: GoogleFonts.niramit(
           fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.5),
       bodyMedium: GoogleFonts.niramit(
@@ -47,7 +53,10 @@ class ThemeStyle {
       labelLarge: GoogleFonts.niramit(
           fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.4),
       labelMedium: GoogleFonts.niramit(
-          fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 1.5),
+          color: const Color.fromRGBO(2, 66, 102, 1),
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          letterSpacing: 1.5),
       labelSmall: GoogleFonts.niramit(
           fontSize: 11, fontWeight: FontWeight.w400, letterSpacing: 1.5),
     ),
