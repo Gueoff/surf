@@ -1,6 +1,7 @@
 import 'package:surf/src/components/favorite_spot_list.dart';
 import 'package:surf/src/components/header.dart';
-import 'package:surf/src/screens/spot_details.dart';
+import 'package:surf/src/models/Spot.dart';
+import 'package:surf/src/screens/spotDetails/spot_details_screen.dart';
 import 'package:surf/src/services/api_service.dart';
 import 'package:surf/src/components/text_input.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -15,32 +16,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var suggests = <SuggestOption>[];
-  final searchController = TextEditingController();
-
-  void _onSearch(String value) async {
-    final apiService = ApiService(endpoint: 'toto');
-    try {
-      var response = await apiService.searchSpot(value);
-      print(response);
-      setState(() {
-        suggests = response;
-      });
-    } catch (error) {
-      print(error);
-    }
-  }
-
-  void _onNavigateToSpotDetailsSreen(SuggestOption suggestOption) {
+  void onNavigateToSpotDetailsSreen(SuggestOption suggestOption) {
+    Spot spot = Spot(suggestOption.id, suggestOption.source.location,
+        suggestOption.source.name, suggestOption.type);
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => SpotDetailsScreen(spotId: suggestOption.id)),
+      MaterialPageRoute(builder: (context) => SpotDetailsScreen(spot: spot)),
     );
   }
 
   Future<List<SuggestOption>?> onSearch(String value) async {
-    final apiService = ApiService(endpoint: 'toto');
+    final apiService = ApiService();
     try {
       var response = await apiService.searchSpot(value);
 
@@ -78,12 +64,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
-            constraints: BoxConstraints(maxHeight: 200),
+            constraints: const BoxConstraints(maxHeight: 200),
             decorationBuilder: (context, child) {
               return Material(
                 type: MaterialType.card,
                 elevation: 8,
-                shadowColor: Color.fromRGBO(97, 216, 240, 0.2),
+                shadowColor: const Color.fromRGBO(97, 216, 240, 0.2),
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
                 child: child,
@@ -109,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             onSelected: (suggestOption) {
-              _onNavigateToSpotDetailsSreen(suggestOption);
+              onNavigateToSpotDetailsSreen(suggestOption);
             },
             suggestionsCallback: (pattern) async {
               return await onSearch(pattern);
@@ -120,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Text('Mes favoris',
                 style: Theme.of(context).textTheme.titleMedium),
           ),
-          const FavoriteSpotList(),
+          FavoriteSpotList(),
         ],
       ),
     );

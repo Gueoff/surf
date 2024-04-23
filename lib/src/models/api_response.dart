@@ -1,5 +1,4 @@
-import 'dart:developer';
-import 'dart:convert';
+import 'package:surf/src/models/location.dart';
 
 class ApiResponse {
   int took;
@@ -31,6 +30,7 @@ class ApiResponse {
     );
   }
 
+  @override
   String toString() {
     return 'toString';
     //return 'Api Response ${this.status}';
@@ -79,8 +79,9 @@ class Hits {
     );
   }
 
+  @override
   String toString() {
-    return 'total: ${total} ${maxScore} ${hits}';
+    return 'total: $total $maxScore $hits';
   }
 }
 
@@ -130,23 +131,6 @@ class Source {
   }
 }
 
-class Location {
-  double longitude;
-  double latitude;
-
-  Location({
-    required this.longitude,
-    required this.latitude,
-  });
-
-  factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
-      longitude: json['lon'],
-      latitude: json['lat'],
-    );
-  }
-}
-
 class Suggest {
   String text;
   //int offset;
@@ -173,6 +157,7 @@ class Suggest {
     );
   }
 
+  @override
   String toString() {
     return '${text} and options...';
   }

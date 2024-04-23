@@ -8,9 +8,7 @@ class ThemeStyle {
         primary: Colors.white,
         secondary: const Color.fromRGBO(97, 216, 240, 1),
         tertiary: const Color.fromRGBO(2, 66, 102, 1),
-        background: Colors.white,
-        onPrimary: Color.fromRGBO(208, 217, 222, 1),
-        onBackground: Color.fromRGBO(208, 217, 222, 1),
+        onPrimary: const Color.fromRGBO(208, 217, 222, 1),
         onSecondary: Colors.white,
         error: Colors.red),
     textTheme: TextTheme(
@@ -51,7 +49,7 @@ class ThemeStyle {
       bodySmall: GoogleFonts.niramit(
           fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 1.25),
       labelLarge: GoogleFonts.niramit(
-          fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.4),
+          fontSize: 18, fontWeight: FontWeight.w600, letterSpacing: 0.4),
       labelMedium: GoogleFonts.niramit(
           color: const Color.fromRGBO(2, 66, 102, 1),
           fontSize: 12,

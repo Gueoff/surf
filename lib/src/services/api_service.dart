@@ -1,15 +1,19 @@
 import 'package:http/http.dart' as http;
+import 'package:surf/src/entities/rating_entity.dart';
+import 'package:surf/src/models/rating.dart';
+import 'package:surf/src/entities/wind_entity.dart';
+import 'package:surf/src/models/wind.dart';
 import 'package:surf/src/models/api_response.dart';
 import 'dart:convert';
 
 class ApiService {
-  final String endpoint;
+  String endpoint = 'https://services.surfline.com';
 
-  ApiService({required this.endpoint});
+  ApiService();
 
-  Future<List<SuggestOption>> searchSpot(String spot) async {
+  Future<List<SuggestOption>> searchSpot(String spotId) async {
     final response = await http.get(Uri.parse(
-        'https://services.surfline.com/search/site?q=${spot}&querySize=10&suggestionSize=10&newsSearch=true'));
+        '$endpoint/search/site?q=$spotId&querySize=6&suggestionSize=6&newsSearch=true'));
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
@@ -28,14 +32,102 @@ class ApiService {
       throw Exception('Failed to load suggests');
     }
   }
+
+  Future<List<Rating>> getSpotRating(String spotId) async {
+    final response = await http.get(Uri.parse(
+        '$endpoint/kbyg/spots/forecasts/rating?spotId=$spotId&days=5&intervalHours=1&cacheEnabled=true'));
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+
+      if (body['data']['rating'] is List && body['data']['rating'].isNotEmpty) {
+        List<RatingEntity> ratingEntities = (body['data']['rating'] as List)
+            .map((entityJson) => RatingEntity.fromJson(entityJson))
+            .toList();
+
+        List<Rating> ratings =
+            ratingEntities.map((entity) => entity.toRating()).toList();
+
+        return ratings;
+      }
+
+      return [];
+    } else {
+      throw Exception('Failed to load rating');
+    }
+  }
+
+  Future<List<Wind>> getSpotWind(String spotId) async {
+    final response = await http.get(Uri.parse(
+        '$endpoint/kbyg/spots/forecasts/wind?spotId=$spotId&days=5&intervalHours=1&units[windSpeed]=KTS&cacheEnabled=true'));
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+
+      if (body['data']['wind'] is List && body['data']['wind'].isNotEmpty) {
+        List<WindEntity> windEntities = (body['data']['wind'] as List)
+            .map((entityJson) => WindEntity.fromJson(entityJson))
+            .toList();
+
+        List<Wind> winds =
+            windEntities.map((entity) => entity.toWind()).toList();
+
+        return winds;
+      }
+
+      return [];
+    } else {
+      throw Exception('Failed to load wind');
+    }
+  }
+
+  Future<Object> getSpotForecasts(String spotId) async {
+    bool cacheEnabled = true;
+
+    final responses = await Future.wait([
+      http.get(Uri.parse(
+          '$endpoint/kbyg/spots/forecasts/rating?spotId=$spotId&days=5&intervalHours=1&cacheEnabled=$cacheEnabled')),
+      http.get(Uri.parse(
+          '$endpoint/kbyg/spots/forecasts/wave?spotId=$spotId&days=5&intervalHours=1&units[swellHeight]=M&units[waveHeight]=M&cacheEnabled=$cacheEnabled')),
+      http.get(Uri.parse(
+          '$endpoint/kbyg/spots/forecasts/wind?spotId=$spotId&days=5&intervalHours=1&units[windSpeed]=KTS&cacheEnabled=$cacheEnabled')),
+      http.get(Uri.parse(
+          '$endpoint/kbyg/spots/forecasts/sunlight?spotId=$spotId&days=5&intervalHours=1&cacheEnabled=$cacheEnabled')),
+      http.get(Uri.parse(
+          '$endpoint/kbyg/spots/forecasts/tides?spotId=$spotId&days=5&intervalHours=1&&units[tideHeight]=M&cacheEnabled=$cacheEnabled')),
+      http.get(Uri.parse(
+          '$endpoint/kbyg/spots/forecasts/weather?spotId=$spotId&days=5&intervalHours=1&units[temperature]=C&cacheEnabled=$cacheEnabled')),
+    ]);
+
+    if (responses[0].statusCode == 200) {
+      var body = jsonDecode(responses[0].body);
+
+      if (body['data']['rating'] is List && body['data']['rating'].isNotEmpty) {
+        List<RatingEntity> ratingEntities = (body['data']['rating'] as List)
+            .map((entityJson) => RatingEntity.fromJson(entityJson))
+            .toList();
+
+        List<Rating> ratings =
+            ratingEntities.map((entity) => entity.toRating()).toList();
+
+        return ratings;
+      }
+
+      return [];
+    } else {
+      throw Exception('Failed to load forecasts');
+    }
+  }
 }
 
+// https://services.surfline.com/kbyg/spots/details?spotId=5842041f4e65fad6a7708c8b
 // https://services.surfline.com/kbyg/spots/forecasts/rating?spotId=584204204e65fad6a770901d&days=5&intervalHours=1&cacheEnabled=true
-// https://services.surfline.com/kbyg/regions/forecasts/conditions?subregionId=58581a836630e24c448790a7&days=5
 // https://services.surfline.com/kbyg/spots/forecasts/wave?spotId=584204204e65fad6a770901d&days=5&intervalHours=1&cacheEnabled=true&units%5BswellHeight%5D=M&units%5BwaveHeight%5D=M
 // https://services.surfline.com/kbyg/spots/forecasts/wind?spotId=584204204e65fad6a770901d&days=5&intervalHours=1&corrected=false&cacheEnabled=true&units%5BwindSpeed%5D=KTS
 // https://services.surfline.com/kbyg/spots/forecasts/sunlight?spotId=584204204e65fad6a770901d&days=16&intervalHours=1
 // https://services.surfline.com/kbyg/spots/forecasts/tides?spotId=584204204e65fad6a770901d&days=6&cacheEnabled=true&units%5BtideHeight%5D=M
 // https://services.surfline.com/kbyg/spots/forecasts/weather?spotId=584204204e65fad6a770901d&days=16&intervalHours=1&cacheEnabled=true&units%5Btemperature%5D=C
+
 // https://services.surfline.com/kbyg/buoys/nearby?cacheEnabled=true&units[swellHeight]=M&latitude=46.687&longitude=-1.942&limit=10&distance=200
 // https://services.surfline.com/kbyg/events/taxonomy?id=584204204e65fad6a770901d&type=spot
+// https://services.surfline.com/kbyg/regions/forecasts/conditions?subregionId=58581a836630e24c448790a7&days=5
