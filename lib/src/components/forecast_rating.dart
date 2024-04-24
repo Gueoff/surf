@@ -31,7 +31,7 @@ class ForecastRating extends StatelessWidget {
     return Text('${(ratingValue + 1).toString()}/7',
         style: Theme.of(context)
             .textTheme
-            .titleMedium!
+            .displayMedium!
             .copyWith(color: getColor()));
   }
 }

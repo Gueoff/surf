@@ -1,40 +1,37 @@
 import 'wind.dart';
 import 'rating.dart';
+import 'weather.dart';
+import 'tide.dart';
+import 'wave.dart';
 
 class Forecast {
   final int timestamp;
   Rating rating;
+  Tide tide;
+  Wave wave;
+  Weather weather;
   Wind wind;
 
   Forecast({
     required this.timestamp,
     required this.rating,
+    required this.tide,
+    required this.wave,
+    required this.weather,
     required this.wind,
   });
 
-  factory Forecast.groupModels(Rating rating, Wind wind) {
+  factory Forecast.groupModels(
+      Rating rating, Tide tide, Wave wave, Weather weather, Wind wind) {
     int timestamp = rating.timestamp;
 
-    return Forecast(timestamp: timestamp, rating: rating, wind: wind);
-  }
-
-  List<Forecast> groupEntitiesByTimestamp(
-      List<Rating> ratingEntities, List<Wind> windEntities) {
-    List<Forecast> forecastList = [];
-
-    for (Rating ratingEntity in ratingEntities) {
-      int timestamp = ratingEntity.timestamp;
-
-      // Find the corresponding wind entity for the current timestamp
-      Wind matchingWind =
-          windEntities.firstWhere((wind) => wind.timestamp == timestamp);
-
-      // Create a new Forecast entity and add it to the list
-      forecastList.add(Forecast(
-          timestamp: timestamp, rating: ratingEntity, wind: matchingWind));
-    }
-
-    return forecastList;
+    return Forecast(
+        timestamp: timestamp,
+        rating: rating,
+        tide: tide,
+        wave: wave,
+        weather: weather,
+        wind: wind);
   }
 
   @override

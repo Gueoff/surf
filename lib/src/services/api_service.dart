@@ -1,7 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'package:surf/src/entities/rating_entity.dart';
+import 'package:surf/src/entities/tide_entity.dart';
+import 'package:surf/src/entities/wave_entity.dart';
+import 'package:surf/src/entities/weather_entity.dart';
 import 'package:surf/src/models/rating.dart';
 import 'package:surf/src/entities/wind_entity.dart';
+import 'package:surf/src/models/tide.dart';
+import 'package:surf/src/models/wave.dart';
+import 'package:surf/src/models/weather.dart';
 import 'package:surf/src/models/wind.dart';
 import 'package:surf/src/models/api_response.dart';
 import 'dart:convert';
@@ -54,6 +60,79 @@ class ApiService {
       return [];
     } else {
       throw Exception('Failed to load rating');
+    }
+  }
+
+  Future<List<Tide>> getSpotTides(String spotId) async {
+    final response = await http.get(Uri.parse(
+        '$endpoint/kbyg/spots/forecasts/tides?spotId=$spotId&days=5&intervalHours=1&&units[tideHeight]=M&cacheEnabled=true'));
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+
+      if (body['data']['tides'] is List && body['data']['tides'].isNotEmpty) {
+        List<TideEntity> tideEntities = (body['data']['tides'] as List)
+            .map((entityJson) => TideEntity.fromJson(entityJson))
+            .toList();
+
+        List<Tide> tides =
+            tideEntities.map((entity) => entity.toTide()).toList();
+
+        return tides;
+      }
+
+      return [];
+    } else {
+      throw Exception('Failed to load tides');
+    }
+  }
+
+  Future<List<Wave>> getSpotWaves(String spotId) async {
+    final response = await http.get(Uri.parse(
+        '$endpoint/kbyg/spots/forecasts/wave?spotId=$spotId&days=5&intervalHours=1&cacheEnabled=true&units%5BswellHeight%5D=M&units%5BwaveHeight%5D=M'));
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+
+      if (body['data']['wave'] is List && body['data']['wave'].isNotEmpty) {
+        List<WaveEntity> waveEntities = (body['data']['wave'] as List)
+            .map((entityJson) => WaveEntity.fromJson(entityJson))
+            .toList();
+        print('ICI NEZGROS');
+        List<Wave> waves =
+            waveEntities.map((entity) => entity.toWave()).toList();
+
+        return waves;
+      }
+
+      return [];
+    } else {
+      throw Exception('Failed to load waves');
+    }
+  }
+
+  Future<List<Weather>> getSpotWeather(String spotId) async {
+    final response = await http.get(Uri.parse(
+        '$endpoint/kbyg/spots/forecasts/weather?spotId=$spotId&days=16&intervalHours=1&cacheEnabled=true&units%5Btemperature%5D=C'));
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+
+      if (body['data']['weather'] is List &&
+          body['data']['weather'].isNotEmpty) {
+        List<WeatherEntity> weatherEntities = (body['data']['weather'] as List)
+            .map((entityJson) => WeatherEntity.fromJson(entityJson))
+            .toList();
+
+        List<Weather> weathers =
+            weatherEntities.map((entity) => entity.toWeather()).toList();
+
+        return weathers;
+      }
+
+      return [];
+    } else {
+      throw Exception('Failed to load weather');
     }
   }
 

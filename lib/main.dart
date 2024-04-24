@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:surf/src/theme/theme.dart';
 import 'package:surf/src/screens/home/home_screen.dart';
@@ -7,6 +8,7 @@ import 'package:intl/date_symbol_data_local.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('fr_FR', null);
+  const SystemUiOverlayStyle(statusBarColor: Color.fromRGBO(97, 216, 240, 1));
   runApp(const MyApp());
 }
 

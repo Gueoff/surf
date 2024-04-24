@@ -1,6 +1,6 @@
 import 'package:surf/src/components/favorite_spot_list.dart';
 import 'package:surf/src/components/header.dart';
-import 'package:surf/src/models/Spot.dart';
+import 'package:surf/src/models/spot.dart';
 import 'package:surf/src/screens/spotDetails/spot_details_screen.dart';
 import 'package:surf/src/services/api_service.dart';
 import 'package:surf/src/components/text_input.dart';

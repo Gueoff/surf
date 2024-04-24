@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:surf/src/models/Spot.dart';
+import 'package:surf/src/models/spot.dart';
 import 'package:surf/src/models/location.dart';
 import 'package:surf/src/screens/spotDetails/spot_details_screen.dart';
 
@@ -16,12 +16,13 @@ class FavoriteSpotList extends StatelessWidget {
     location2 = Location(longitude: 34.0522, latitude: -118.2437);
     spot1 = Spot("584204204e65fad6a770901d", location1,
         "Saint gilles croix de vie", "spot");
-    spot2 = Spot("584204204e65fad6a770901d", location2, "Spot 2", "spot");
+    spot2 = Spot("584204204e65fad6a770901q", location2, "Spot 2", "spot");
 
     // Initialize the spots list here
     spots = [
-      Spot('st gilles', location1, 'Saint gilles croix de vie', '1'),
-      Spot('st gilles', location2, 'Spot', '2'),
+      Spot('584204204e65fad6a770901d', location1, 'Saint gilles croix de vie',
+          'spot'),
+      Spot('584204204e65fad6a770901q', location2, 'Spot 2', 'spot'),
     ];
   }
 
@@ -46,6 +47,7 @@ class FavoriteSpotList extends StatelessWidget {
             ),
             child: Card(
               elevation: 8,
+              margin: EdgeInsets.zero,
               shadowColor: const Color.fromRGBO(97, 216, 240, 0.2),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
@@ -60,20 +62,23 @@ class FavoriteSpotList extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: ShaderMask(
-                        shaderCallback: (bounds) => const LinearGradient(
-                          colors: [
-                            Colors.transparent,
-                            Color.fromRGBO(97, 216, 240, 0.4),
-                          ],
-                          begin: Alignment.center,
-                          end: Alignment.center,
-                        ).createShader(bounds),
-                        blendMode: BlendMode.darken,
-                        child: Image.asset(
-                          height: 300,
-                          'assets/images/gilles.jpg',
-                          fit: BoxFit.cover,
+                      child: Hero(
+                        tag: spot.id,
+                        child: ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              Color.fromRGBO(97, 216, 240, 0.4),
+                            ],
+                            begin: Alignment.center,
+                            end: Alignment.center,
+                          ).createShader(bounds),
+                          blendMode: BlendMode.darken,
+                          child: Image.asset(
+                            height: 300,
+                            'assets/images/gilles.jpg',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
@@ -94,7 +99,7 @@ class FavoriteSpotList extends StatelessWidget {
             ),
           );
         },
-        separatorBuilder: (context, index) => const SizedBox(width: 8),
+        separatorBuilder: (context, index) => const SizedBox(width: 16),
         itemCount: spots.length,
       ),
     );

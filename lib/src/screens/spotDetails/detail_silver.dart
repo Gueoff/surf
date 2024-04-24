@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:surf/src/models/Spot.dart';
+import 'package:surf/src/models/spot.dart';
 
 class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
   final Spot spot;
@@ -20,7 +20,7 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
     return Stack(
       children: [
         Hero(
-          tag: spot.type,
+          tag: spot.id,
           child: ShaderMask(
             shaderCallback: (bounds) => const LinearGradient(
               colors: [

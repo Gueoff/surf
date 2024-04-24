@@ -159,7 +159,7 @@ class Suggest {
 
   @override
   String toString() {
-    return '${text} and options...';
+    return '$text and options...';
   }
 }
 
@@ -194,7 +194,8 @@ class SuggestOption {
     );
   }
 
+  @override
   String toString() {
-    return '${id}: ${text} - ${type}';
+    return '$id: $text - $type';
   }
 }
