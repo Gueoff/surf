@@ -49,14 +49,21 @@ class ThemeStyle {
       bodySmall: GoogleFonts.niramit(
           fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 1.25),
       labelLarge: GoogleFonts.niramit(
-          fontSize: 18, fontWeight: FontWeight.w600, letterSpacing: 0.4),
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.4,
+      ),
       labelMedium: GoogleFonts.niramit(
           color: const Color.fromRGBO(2, 66, 102, 1),
           fontSize: 12,
           fontWeight: FontWeight.w400,
           letterSpacing: 1.5),
       labelSmall: GoogleFonts.niramit(
-          fontSize: 11, fontWeight: FontWeight.w400, letterSpacing: 1.5),
+        fontSize: 11,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 1.5,
+        color: const Color.fromRGBO(2, 66, 102, 1),
+      ),
     ),
   );
 }

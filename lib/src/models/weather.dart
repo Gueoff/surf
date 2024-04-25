@@ -34,6 +34,6 @@ class Weather {
 
   @override
   String toString() {
-    return 'Weather($timestamp : $temperature)';
+    return 'Weather($timestamp : $condition)';
   }
 }

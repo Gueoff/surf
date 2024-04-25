@@ -4,11 +4,11 @@ import 'package:surf/src/models/location.dart';
 import 'package:surf/src/screens/spotDetails/spot_details_screen.dart';
 
 class FavoriteSpotList extends StatelessWidget {
-  late Location location1;
-  late Location location2;
-  late Spot spot1;
-  late Spot spot2;
-  late List<Spot> spots;
+  late final Location location1;
+  late final Location location2;
+  late final Spot spot1;
+  late final Spot spot2;
+  late final List<Spot> spots;
 
   FavoriteSpotList({Key? key}) : super(key: key) {
     // Initialize the Location and Spot objects inside the constructor

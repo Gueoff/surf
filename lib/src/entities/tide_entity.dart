@@ -15,7 +15,7 @@ class TideEntity {
 
   factory TideEntity.fromJson(Map<String, dynamic> json) {
     return TideEntity(
-      height: json['height'].toDouble(),
+      height: json['height']?.toDouble(),
       type: json['type'],
       timestamp: json['timestamp'],
       utcOffset: json['utcOffset'],

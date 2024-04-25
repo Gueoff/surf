@@ -8,12 +8,14 @@ class RawEntity {
 }
 
 class SurfEntity {
-  double min;
-  double max;
+  double? min;
+  double? max;
   bool plus;
   String humanRelation;
   // RawEntity raw;
-  int optimalScore;
+  //int optimalScore;
+  int timestamp;
+  int utcOffset;
 
   SurfEntity({
     required this.min,
@@ -21,17 +23,21 @@ class SurfEntity {
     required this.plus,
     required this.humanRelation,
     //required this.raw,
-    required this.optimalScore,
+    //required this.optimalScore,
+    required this.timestamp,
+    required this.utcOffset,
   });
 
   factory SurfEntity.fromJson(Map<String, dynamic> json) {
     return SurfEntity(
-      min: json['min'].toDouble(),
-      max: json['max'].toDouble(),
-      plus: json['plus'],
-      humanRelation: json['humanRelation'],
+      min: json['surf']['min']?.toDouble(),
+      max: json['surf']['max']?.toDouble(),
+      plus: json['surf']['plus'],
+      humanRelation: json['surf']['humanRelation'],
       //raw: json['raw'],
-      optimalScore: json['optimalScore'],
+      //optimalScore: json['surf']['optimalScore'],
+      timestamp: json['timestamp'],
+      utcOffset: json['utcOffset'],
     );
   }
 
@@ -42,6 +48,7 @@ class SurfEntity {
         plus: plus,
         humanRelation: humanRelation,
         // raw: raw,
-        optimalScore: optimalScore);
+        //optimalScore: optimalScore,
+        timestamp: timestamp);
   }
 }

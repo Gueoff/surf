@@ -3,11 +3,14 @@ import 'package:surf/src/models/spot.dart';
 import 'package:surf/src/models/forecast.dart';
 import 'package:surf/src/models/rating.dart';
 import 'package:surf/src/models/tide.dart';
-import 'package:surf/src/models/wave.dart';
+import 'package:surf/src/models/water_temperature.dart';
+import 'package:surf/src/models/surf.dart';
+import 'package:surf/src/models/swell.dart';
 import 'package:surf/src/models/weather.dart';
 import 'package:surf/src/models/wind.dart';
 import 'package:surf/src/screens/spotDetails/detail_silver.dart';
 import 'package:surf/src/screens/spotDetails/timeline_card.dart';
+import 'package:surf/src/screens/spotDetails/water_temperature_card.dart';
 import 'package:surf/src/screens/spotDetails/wave_card.dart';
 import 'package:surf/src/screens/spotDetails/wind_card.dart';
 import 'package:surf/src/screens/spotDetails/weather_card.dart';
@@ -17,38 +20,74 @@ import 'dart:math' as math;
 
 List<Forecast> groupEntitiesByTimestamp(
     List<Rating> ratingEntities,
+    List<Surf> surfEntities,
+    List<Swell> swellEntities,
     List<Tide> tideEntities,
-    List<Wave> waveEntities,
     List<Weather> weatherEntities,
     List<Wind> windEntities) {
   List<Forecast> forecastList = [];
 
-  for (int i = 0; i < ratingEntities.length; i++) {
-    Rating ratingEntity = ratingEntities[i];
+  ratingEntities.forEach((Rating ratingEntity) {
     int timestamp = ratingEntity.timestamp;
 
-    print('ok');
+    Tide matchingTide =
+        tideEntities.firstWhere((element) => element.timestamp == timestamp);
+    Surf matchingSurf =
+        surfEntities.firstWhere((element) => element.timestamp == timestamp);
+    Swell matchingSwell =
+        swellEntities.firstWhere((element) => element.timestamp == timestamp);
+    Weather matchingWeather =
+        weatherEntities.firstWhere((element) => element.timestamp == timestamp);
+    Wind matchingWind =
+        windEntities.firstWhere((element) => element.timestamp == timestamp);
 
-    if (i % 3 == 0) {
-      Tide matchingTide =
-          tideEntities.firstWhere((element) => element.timestamp == timestamp);
-      Wave matchingWave =
-          waveEntities.firstWhere((element) => element.timestamp == timestamp);
-      Weather matchingWeather = weatherEntities
-          .firstWhere((element) => element.timestamp == timestamp);
-      Wind matchingWind =
-          windEntities.firstWhere((element) => element.timestamp == timestamp);
-
-      // Create a new Forecast entity and add it to the list
-      forecastList.add(Forecast.groupModels(ratingEntity, matchingTide,
-          matchingWave, matchingWeather, matchingWind));
-    }
-  }
+    // Create a new Forecast entity and add it to the list
+    forecastList.add(Forecast.groupModels(ratingEntity, matchingSurf,
+        matchingSwell, matchingTide, matchingWeather, matchingWind));
+  });
 
   return forecastList;
 }
 
-double timelineCardWidth = 200;
+// Trouver l'indice de l'élément le plus proche de la date actuelle.
+int findNearestIndex(List<Forecast> forecastData) {
+  var currentDate = DateTime.now().millisecondsSinceEpoch / 1000;
+  int minIndex = 0;
+  int maxIndex = forecastData.length - 1;
+
+  // var ratingDate = DateTime.fromMillisecondsSinceEpoch(forecastData[i].timestamp * 1000);
+  // Cas particuliers pour les extrémités de la liste.
+  if (currentDate < forecastData[minIndex].timestamp) {
+    return minIndex;
+  }
+  if (currentDate > forecastData[maxIndex].timestamp) {
+    return maxIndex;
+  }
+
+  // Recherche binaire pour trouver l'indice le plus proche de la date actuelle.
+  while (minIndex <= maxIndex) {
+    int midIndex = (minIndex + maxIndex) ~/ 2;
+    var midDate = forecastData[midIndex].timestamp;
+
+    if (midDate < currentDate) {
+      minIndex = midIndex + 1;
+    } else if (midDate > currentDate) {
+      maxIndex = midIndex - 1;
+    } else {
+      return midIndex; // Date exacte trouvée.
+    }
+  }
+
+  // Comparer les deux dates les plus proches de la date actuelle.
+  var beforeDate = forecastData[maxIndex].timestamp;
+  var afterDate = forecastData[minIndex].timestamp;
+
+  var beforeDifference = currentDate - beforeDate;
+  var afterDifference = afterDate - currentDate;
+  return (beforeDifference <= afterDifference) ? maxIndex : minIndex;
+}
+
+double timelineCardWidth = 140;
 
 class SpotDetailsScreen extends StatefulWidget {
   final Spot spot;
@@ -62,12 +101,12 @@ class SpotDetailsScreen extends StatefulWidget {
 class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   Forecast? selectedForecast;
   late ScrollController _scrollController;
-  final dateFormatter = DateFormat.yMMMMd();
-  final timeFormatter = DateFormat.Hm();
+  final dateFormatter = DateFormat('E d/MM', 'fr_FR');
   late Future<List<Forecast>> future;
   get offset => _scrollController.hasClients ? _scrollController.offset : 0;
   late List<Forecast> forecastData;
   DateTime currentDate = DateTime.now();
+  late WaterTemperature waterTemperature;
 
   @override
   void initState() {
@@ -81,23 +120,32 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   Future<List<Forecast>> onGetSpotForecasts(String spotId) async {
     final apiService = ApiService();
     late List<Rating> responseRating;
+    late List<Surf> responseSurf;
+    late List<Swell> responseSwell;
     late List<Tide> responseTide;
-    late List<Wave> responseWave;
     late List<Weather> responseWeather;
     late List<Wind> responseWind;
+    late WaterTemperature responseWaterTemperature;
 
     try {
       await Future.wait<void>([
         (() async => responseRating = await apiService.getSpotRating(spotId))(),
         (() async => responseTide = await apiService.getSpotTides(spotId))(),
-        (() async => responseWave = await apiService.getSpotWaves(spotId))(),
+        (() async => responseSurf = await apiService.getSpotSurf(spotId))(),
+        (() async => responseSwell = await apiService.getSpotSwells(spotId))(),
         (() async =>
             responseWeather = await apiService.getSpotWeather(spotId))(),
         (() async => responseWind = await apiService.getSpotWind(spotId))(),
+        (() async => responseWaterTemperature =
+            await apiService.getSpotWaterTemperature(spotId))(),
       ]);
 
-      forecastData = groupEntitiesByTimestamp(responseRating, responseTide,
-          responseWave, responseWeather, responseWind);
+      forecastData = groupEntitiesByTimestamp(responseRating, responseSurf,
+          responseSwell, responseTide, responseWeather, responseWind);
+
+      setState(() {
+        waterTemperature = responseWaterTemperature;
+      });
 
       return forecastData;
     } catch (error) {
@@ -128,27 +176,12 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   /// Scroll to the current time.
   void _scrollToCurrentDate() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      var index = findNearestIndex(forecastData);
       _scrollController.animateTo(
-        120 * 24, // Adjust the value based on the item height
+        index * timelineCardWidth,
         duration: const Duration(seconds: 1),
         curve: Curves.easeInOut,
       );
-/*
-      var currentDate = DateTime.now();
-      for (int i = 0; i < ratingList.length; i++) {
-        var ratingDate =
-            DateTime.fromMillisecondsSinceEpoch(ratingList[i].timestamp * 1000);
-        if (ratingDate.year == currentDate.year &&
-            ratingDate.month == currentDate.month &&
-            ratingDate.day == currentDate.day) {
-          _scrollController.animateTo(
-            i * 70.0, // Adjust the value based on the item height
-            duration: Duration(seconds: 1),
-            curve: Curves.easeInOut,
-          );
-          break;
-        }
-      }*/
     });
   }
 
@@ -256,28 +289,43 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                             if (selectedForecast != null)
                               Column(
                                 children: [
+                                  Row(
+                                    children: [
+                                      Flexible(
+                                        flex: 1,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 24, right: 6, bottom: 12),
+                                          child: WeatherCard(
+                                              weather:
+                                                  selectedForecast!.weather),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        flex: 1,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 6, right: 24, bottom: 12),
+                                          child: WaterTemperatureCard(
+                                              waterTemperature:
+                                                  waterTemperature),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   Padding(
-                                    padding: const EdgeInsets.all(24),
+                                    padding: const EdgeInsets.only(
+                                        left: 24, right: 24, bottom: 12),
                                     child:
                                         WindCard(wind: selectedForecast!.wind),
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 24),
-                                        child: WeatherCard(
-                                            weather: selectedForecast!.weather),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 24),
-                                        child: WaveCard(
-                                            wave: selectedForecast!.wave),
-                                      ),
-                                    ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 24, right: 24, bottom: 12),
+                                    child: WaveCard(
+                                      surf: selectedForecast!.surf,
+                                      swell: selectedForecast!.swell,
+                                    ),
                                   ),
                                 ],
                               ),

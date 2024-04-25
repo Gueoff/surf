@@ -8,7 +8,7 @@ class TimelineCard extends StatelessWidget {
   final Forecast forecast;
   final Function(Forecast) onCardTap;
   final timeFormatter = DateFormat.Hm();
-  late DateTime dateTime;
+  late final DateTime dateTime;
 
   TimelineCard({Key? key, required this.forecast, required this.onCardTap})
       : dateTime =

@@ -1,44 +1,79 @@
 import 'package:surf/src/models/swell.dart';
 
-class SwellEntity {
+class SwellElementEntity {
   double direction;
   double directionMin;
   double height;
   double impact;
-  int optimalScore;
   int period;
   double power;
 
-  SwellEntity({
+  SwellElementEntity({
     required this.direction,
     required this.directionMin,
     required this.height,
     required this.impact,
-    required this.optimalScore,
     required this.period,
     required this.power,
   });
 
-  factory SwellEntity.fromJson(Map<String, dynamic> json) {
-    return SwellEntity(
-      direction: json['direction'].toDouble(),
-      directionMin: json['directionMin'].toDouble(),
-      height: json['height'].toDouble(),
-      impact: json['impact'].toDouble(),
-      optimalScore: json['optimalScore'],
+  factory SwellElementEntity.fromJson(Map<String, dynamic> json) {
+    return SwellElementEntity(
+      direction: json['direction']?.toDouble(),
+      directionMin: json['directionMin']?.toDouble(),
+      height: json['height']?.toDouble(),
+      impact: json['impact']?.toDouble(),
       period: json['period'],
-      power: json['power'].toDouble(),
+      power: json['power']?.toDouble(),
+    );
+  }
+
+  SwellElement toSwellElement() {
+    return SwellElement(
+      direction: direction,
+      directionMin: directionMin,
+      height: height,
+      impact: impact,
+      period: period,
+      power: power,
+    );
+  }
+}
+
+class SwellEntity {
+  List<SwellElementEntity> swells;
+  double power;
+  int timestamp;
+  int utcOffset;
+
+  SwellEntity({
+    required this.swells,
+    required this.power,
+    required this.timestamp,
+    required this.utcOffset,
+  });
+
+  factory SwellEntity.fromJson(Map<String, dynamic> json) {
+    List<dynamic> swellsJson = json['swells'];
+    List<SwellElementEntity> swells = swellsJson
+        .map((swellJson) => SwellElementEntity.fromJson(swellJson))
+        .toList();
+
+    return SwellEntity(
+      swells: swells,
+      power: json['power']?.toDouble() ??
+          0.0, // Assurez-vous de gérer les valeurs null
+      timestamp: json['timestamp'],
+      utcOffset: json['utcOffset'],
     );
   }
 
   Swell toSwell() {
     return Swell(
-        direction: direction,
-        directionMin: directionMin,
-        height: height,
-        impact: impact,
-        optimalScore: optimalScore,
-        period: period,
-        power: power);
+      swells: swells.map((element) => element.toSwellElement()).toList(),
+      power: power,
+      timestamp: timestamp,
+      utcOffset: utcOffset,
+    );
   }
 }
