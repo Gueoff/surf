@@ -8,13 +8,13 @@ class Pressable extends StatelessWidget {
   final Color? rippleColor;
 
   const Pressable({
+    super.key,
     required this.child,
     required this.onTap,
     this.borderRadius,
     this.backgroundColor,
     this.rippleColor,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -7,4 +7,9 @@ class Spot {
   String type;
 
   Spot(this.id, this.location, this.name, this.type);
+
+  @override
+  String toString() {
+    return 'Spot($name $id)';
+  }
 }

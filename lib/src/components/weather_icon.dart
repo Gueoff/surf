@@ -41,7 +41,6 @@ class WeatherIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(condition);
     return SvgPicture.asset(getIcon(),
         width: 36, height: 36, semanticsLabel: 'Meteo');
   }

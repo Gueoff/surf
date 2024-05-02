@@ -93,6 +93,7 @@ class SpotDetailsScreen extends StatefulWidget {
   final Spot spot;
 
   const SpotDetailsScreen({super.key, required this.spot});
+  //const SpotDetailsScreen({super.key});
 
   @override
   State<SpotDetailsScreen> createState() => _SpotDetailsScreenState();
@@ -193,9 +194,9 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
         slivers: [
           SliverPersistentHeader(
             delegate: DetailSliverDelegate(
-              spot: widget.spot,
               expandedHeight: 360,
               roundedContainerHeight: 40,
+              spot: widget.spot,
             ),
           ),
           SliverToBoxAdapter(

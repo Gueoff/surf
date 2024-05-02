@@ -10,10 +10,9 @@ class TimelineCard extends StatelessWidget {
   final timeFormatter = DateFormat.Hm();
   late final DateTime dateTime;
 
-  TimelineCard({Key? key, required this.forecast, required this.onCardTap})
-      : dateTime =
-            DateTime.fromMillisecondsSinceEpoch(forecast.timestamp * 1000),
-        super(key: key);
+  TimelineCard({super.key, required this.forecast, required this.onCardTap}) {
+    dateTime = DateTime.fromMillisecondsSinceEpoch(forecast.timestamp * 1000);
+  }
 
   @override
   Widget build(BuildContext context) {

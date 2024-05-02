@@ -1,17 +1,18 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:surf/src/components/favorite_button.dart';
 import 'package:surf/src/models/spot.dart';
 
 class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
-  final Spot spot;
   final double expandedHeight;
+
   final double roundedContainerHeight;
+  final Spot spot;
 
   DetailSliverDelegate({
-    required this.spot,
     required this.expandedHeight,
     required this.roundedContainerHeight,
+    required this.spot,
   });
 
   @override
@@ -60,6 +61,10 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
               ),
             ),
           ),
+        ),
+        Positioned(
+          right: 0,
+          child: FavoriteButton(spot: spot),
         ),
         Positioned(
             left: 24,

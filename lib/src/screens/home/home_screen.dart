@@ -1,6 +1,11 @@
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:surf/src/components/favorite_spot_list.dart';
 import 'package:surf/src/components/header.dart';
+import 'package:surf/src/models/location.dart';
 import 'package:surf/src/models/spot.dart';
+import 'package:surf/src/redux/app_state.dart';
+import 'package:surf/src/redux/spot/spot_actions.dart';
+import 'package:surf/src/redux/spot/spot_view_model.dart';
 import 'package:surf/src/screens/spotDetails/spot_details_screen.dart';
 import 'package:surf/src/services/api_service.dart';
 import 'package:surf/src/components/text_input.dart';
@@ -19,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void onNavigateToSpotDetailsSreen(SuggestOption suggestOption) {
     Spot spot = Spot(suggestOption.id, suggestOption.source.location,
         suggestOption.source.name, suggestOption.type);
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SpotDetailsScreen(spot: spot)),
@@ -35,6 +41,14 @@ class _HomeScreenState extends State<HomeScreen> {
       print(error);
     }
     return null;
+  }
+
+  void _onFetchPostsPressed() {
+    var location = Location(longitude: 34.0522, latitude: -118.2437);
+    var spot = Spot("584204204e65fad6a770901d", location,
+        "Saint gilles croix de vie", "spot");
+
+    StoreProvider.of<AppState>(context).dispatch(AddSpotAction(spot));
   }
 
   @override
@@ -106,7 +120,14 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Text('Mes favoris',
                 style: Theme.of(context).textTheme.titleMedium),
           ),
-          FavoriteSpotList(),
+          StoreConnector<AppState, SpotViewModel>(
+            converter: (store) => SpotViewModel.fromStore(store),
+            builder: (context, viewModel) {
+              return FavoriteSpotList(spots: viewModel.spots);
+            },
+          ),
+          FilledButton(
+              onPressed: _onFetchPostsPressed, child: const Text('clic')),
         ],
       ),
     );
