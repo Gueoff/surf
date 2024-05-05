@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:surf/src/entities/rating_entity.dart';
+import 'package:surf/src/entities/suggest_option_entity.dart';
 import 'package:surf/src/entities/surf_entity.dart';
 import 'package:surf/src/entities/swell_entity.dart';
 import 'package:surf/src/entities/tide_entity.dart';
@@ -8,6 +9,7 @@ import 'package:surf/src/entities/wave_entity.dart';
 import 'package:surf/src/entities/weather_entity.dart';
 import 'package:surf/src/models/rating.dart';
 import 'package:surf/src/entities/wind_entity.dart';
+import 'package:surf/src/models/suggest_option.dart';
 import 'package:surf/src/models/surf.dart';
 import 'package:surf/src/models/swell.dart';
 import 'package:surf/src/models/tide.dart';
@@ -16,7 +18,6 @@ import 'package:surf/src/models/water_temperature.dart';
 import 'package:surf/src/models/wave.dart';
 import 'package:surf/src/models/weather.dart';
 import 'package:surf/src/models/wind.dart';
-import 'package:surf/src/models/api_response.dart';
 import 'dart:convert';
 
 // https://services.surfline.com/kbyg/spots/batch?cacheEnabled=true&units%5BswellHeight%5D=M&units%5Btemperature%5D=C&units%5BtideHeight%5D=M&units%5BwaveHeight%5D=M&units%5BwindSpeed%5D=KPH&spotIds=5842041f4e65fad6a7708c8b
@@ -64,17 +65,18 @@ class ApiService {
   Future<List<SuggestOption>> searchSpot(String spotId) async {
     final response = await http.get(Uri.parse(
         '$endpoint/search/site?q=$spotId&querySize=6&suggestionSize=6&newsSearch=true'));
-
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
       if (body is List && body.isNotEmpty) {
         var suggestsDto =
             (body.first['suggest']['spot-suggest'] as List<dynamic>).toList();
 
-        var suggests =
-            suggestsDto.map((suggestDto) => Suggest.fromJson(suggestDto));
+        var suggestsEntities =
+            suggestsDto.map((suggestDto) => SuggestEntity.fromJson(suggestDto));
 
-        return suggests.first.options;
+        return suggestsEntities.first.options
+            .map((c) => c.toSuggestOption())
+            .toList();
       }
 
       return [];

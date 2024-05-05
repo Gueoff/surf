@@ -15,9 +15,19 @@ class AppState {
     );
   }
 
-  AppState copyWith() {
+  AppState copyWith({
+    required SpotState spotState,
+  }) {
     return AppState(
       spotState: spotState ?? this.spotState,
     );
+  }
+
+  static AppState fromJson(dynamic json) {
+    return AppState(spotState: SpotState.fromJson(json["spotState"]));
+  }
+
+  dynamic toJson() {
+    return {'spotState': spotState.toJson()};
   }
 }

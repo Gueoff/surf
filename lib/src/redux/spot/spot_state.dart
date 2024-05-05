@@ -27,13 +27,29 @@ class SpotState {
       spotFavorites: spotFavorites ?? this.spotFavorites,
     );
   }
-}
 
-SpotState spotReducer(SpotState state, dynamic action) {
-  if (action is AddSpotAction) {
-    return state.copyWith(
-      spotFavorites: List.of(state.spotFavorites)..add(action.spot),
+  static SpotState fromJson(dynamic json) {
+    return SpotState(
+      status: Status.idle,
+      spotFavorites: json["spotFavorites"] != null
+          ? List<Spot>.from(json["spotFavorites"].map((x) => Spot.fromJson(x)))
+          : [],
     );
   }
-  return state;
+
+  dynamic toJson() {
+    return {
+      'status': status.toString(),
+      'spotFavorites': spotFavorites.map((spot) => spot.toJson()).toList(),
+    };
+  }
+
+  SpotState spotReducer(SpotState state, dynamic action) {
+    if (action is AddSpotAction) {
+      return state.copyWith(
+        spotFavorites: List.of(state.spotFavorites)..add(action.spot),
+      );
+    }
+    return state;
+  }
 }

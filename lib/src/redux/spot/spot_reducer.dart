@@ -3,16 +3,6 @@ import 'package:surf/src/models/status.dart';
 import 'package:surf/src/redux/spot/spot_actions.dart';
 import 'package:surf/src/redux/spot/spot_state.dart';
 
-/*
-spotsReducer(SpotState prevState, SetSpotStateAction action) {
-  final payload = action.spotState;
-
-  return prevState.copyWith(
-    status: payload.status,
-    spotFavorites: payload.spotFavorites,
-  );
-}*/
-
 final spotsReducer = combineReducers<SpotState>([
   TypedReducer<SpotState, AddSpotAction>(_addSpot).call,
   TypedReducer<SpotState, RemoveSpotAction>(_removeSpot).call,
