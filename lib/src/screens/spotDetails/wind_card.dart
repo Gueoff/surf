@@ -1,11 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:surf/src/models/wind.dart';
-import 'dart:math' as math;
 
-class WindCard extends StatelessWidget {
+double _calculateDifference(double previousDirection, double newDirection) {
+  return (newDirection - previousDirection) / 360;
+}
+
+class WindCard extends StatefulWidget {
   final Wind wind;
 
   const WindCard({super.key, required this.wind});
+
+  @override
+  _WindCardState createState() => _WindCardState();
+}
+
+class _WindCardState extends State<WindCard> {
+  late double turns;
+
+  @override
+  void initState() {
+    super.initState();
+    turns = _calculateDifference(0, widget.wind.direction);
+  }
+
+  @override
+  void didUpdateWidget(WindCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.wind.direction != oldWidget.wind.direction) {
+      turns +=
+          _calculateDifference(oldWidget.wind.direction, widget.wind.direction);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,20 +64,22 @@ class WindCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(wind.directionType.toString(),
+                      Text(widget.wind.directionType.toString(),
                           style: Theme.of(context).textTheme.labelMedium),
-                      Text('${wind.speed.round().toString()} km/h',
+                      Text('${widget.wind.speed.round().toString()} km/h',
                           style: Theme.of(context).textTheme.labelMedium),
-                      Text('Rafales à ${wind.gust.round().toString()} km/h',
-                          style: Theme.of(context).textTheme.labelSmall)
+                      Text(
+                          'Rafales à ${widget.wind.gust.round().toString()} km/h',
+                          style: Theme.of(context).textTheme.labelSmall),
                     ],
                   ),
                 ],
               ),
-              Transform.rotate(
-                angle: (wind.direction - 180) * (math.pi / 180),
+              AnimatedRotation(
+                duration: const Duration(milliseconds: 600),
+                turns: turns,
                 child: Icon(
-                  Icons.arrow_upward,
+                  Icons.arrow_downward,
                   color: Theme.of(context).colorScheme.tertiary,
                   size: 36,
                 ),

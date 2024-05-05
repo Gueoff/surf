@@ -87,7 +87,8 @@ int findNearestIndex(List<Forecast> forecastData) {
   return (beforeDifference <= afterDifference) ? maxIndex : minIndex;
 }
 
-double timelineCardWidth = 140;
+double timelineCardWidth = 110;
+double marginHorizontal = 24.0;
 
 class SpotDetailsScreen extends StatefulWidget {
   final Spot spot;
@@ -103,11 +104,13 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   Forecast? selectedForecast;
   late ScrollController _scrollController;
   final dateFormatter = DateFormat('E d/MM', 'fr_FR');
+  final timeFormatter = DateFormat.Hm();
   late Future<List<Forecast>> future;
   get offset => _scrollController.hasClients ? _scrollController.offset : 0;
   late List<Forecast> forecastData;
   DateTime currentDate = DateTime.now();
   late WaterTemperature waterTemperature;
+  double screenWidth = 0.0;
 
   @override
   void initState() {
@@ -165,13 +168,19 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   /// Scroll horizontal event
   onScroll() {
-    // Update the current date.
-    final index = (_scrollController.offset / (timelineCardWidth + 24)).round();
+    final itemWidth = timelineCardWidth + 12;
+    final middlePosition = _scrollController.offset + screenWidth / 2 - 18;
+
+    int index = (middlePosition / itemWidth).floor();
     final forecast = forecastData[index];
-    setState(() {
-      currentDate =
-          DateTime.fromMillisecondsSinceEpoch(forecast.timestamp * 1000);
-    });
+
+    if (index >= 0 && index < forecastData.length) {
+      setState(() {
+        selectedForecast = forecast;
+        currentDate =
+            DateTime.fromMillisecondsSinceEpoch(forecast.timestamp * 1000);
+      });
+    }
   }
 
   /// Scroll to the current time.
@@ -188,6 +197,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -201,156 +212,182 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
           ),
           SliverToBoxAdapter(
             child: FutureBuilder(
-                future: future,
-                builder: (context, snapshot) {
-                  return snapshot.connectionState == ConnectionState.waiting
-                      ? Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: Theme.of(context).colorScheme.secondary,
-                              backgroundColor: Colors.white,
-                            ),
+              future: future,
+              builder: (context, snapshot) {
+                return snapshot.connectionState == ConnectionState.waiting
+                    ? Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.secondary,
+                            backgroundColor: Colors.white,
                           ),
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 24, right: 24),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(dateFormatter.format(currentDate),
+                        ),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 24, right: 24),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(dateFormatter.format(currentDate),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium),
+                                FilledButton(
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.secondary,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(14)),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    _scrollToCurrentDate();
+                                  },
+                                  child: Text('Now',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .titleMedium),
-                                  FilledButton(
-                                    style: FilledButton.styleFrom(
-                                      backgroundColor: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(14)),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      _scrollToCurrentDate();
-                                    },
-                                    child: Text('Now',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 20),
-                              height: 150,
-                              child: ListView.separated(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
+                                          .labelLarge!
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary)),
                                 ),
-                                controller: _scrollController,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final forecast = snapshot.data![index];
+                              ],
+                            ),
+                          ),
+                          Stack(
+                            children: [
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 20),
+                                height: 150,
+                                child: ListView.separated(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 24,
+                                  ),
+                                  controller: _scrollController,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    final forecast = snapshot.data![index];
 
-                                  return Column(
-                                    children: [
-                                      SizedBox(
-                                        width: timelineCardWidth,
-                                        child: TimelineCard(
-                                            forecast: forecast,
-                                            onCardTap: onPressForecast),
-                                      )
-                                    ],
-                                  );
-                                },
-                                itemCount: snapshot.data!.length,
-                                separatorBuilder: (context, index) =>
-                                    const VerticalDivider(
-                                  width: 12,
-                                  thickness: 2,
-                                  color: Colors.white,
+                                    return Column(
+                                      children: [
+                                        SizedBox(
+                                          width: forecast.timestamp ==
+                                                  selectedForecast?.timestamp
+                                              ? timelineCardWidth
+                                              : timelineCardWidth,
+                                          child: TimelineCard(
+                                              forecast: forecast,
+                                              onCardTap: onPressForecast),
+                                        )
+                                      ],
+                                    );
+                                  },
+                                  itemCount: snapshot.data!.length,
+                                  separatorBuilder: (context, index) =>
+                                      const VerticalDivider(
+                                    width: 12,
+                                    thickness: 2,
+                                    color: Colors.transparent,
+                                  ),
+                                  scrollDirection: Axis.horizontal,
                                 ),
-                                scrollDirection: Axis.horizontal,
                               ),
-                            ),
-                            if (selectedForecast != null)
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Flexible(
-                                        flex: 1,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 24, right: 6, bottom: 12),
-                                          child: WeatherCard(
-                                              weather:
-                                                  selectedForecast!.weather),
-                                        ),
-                                      ),
-                                      Flexible(
-                                        flex: 1,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 6, right: 24, bottom: 12),
-                                          child: WaterTemperatureCard(
-                                              waterTemperature:
-                                                  waterTemperature),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 24, right: 24, bottom: 12),
-                                    child:
-                                        WindCard(wind: selectedForecast!.wind),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 24, right: 24, bottom: 12),
-                                    child: WaveCard(
-                                      surf: selectedForecast!.surf,
-                                      swell: selectedForecast!.swell,
-                                    ),
-                                  ),
-                                ],
+                              Positioned(
+                                left: screenWidth / 2,
+                                top: 0,
+                                child: Container(
+                                  width: 1,
+                                  height: 200,
+                                  color: Colors.red,
+                                ),
                               ),
-                            AnimatedBuilder(
-                              animation: _scrollController,
-                              builder: (BuildContext context, Widget? child) {
-                                return SizedBox(
-                                  width: 200, // Specify a width here
-                                  height: 200, // Specify a height here
-                                  child: OverflowBox(
-                                    maxWidth: double.infinity,
-                                    alignment: const Alignment(4, 3),
-                                    child: Transform.rotate(
-                                      angle: ((math.pi * offset) / -1024),
-                                      child: const Icon(Icons.settings,
-                                          size: 48, color: Colors.red),
+                            ],
+                          ),
+                          if (selectedForecast != null)
+                            Column(
+                              children: [
+                                Text(
+                                    timeFormatter.format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            selectedForecast!.timestamp *
+                                                1000)),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge!
+                                        .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                        )),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      flex: 1,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 24, right: 6, bottom: 12),
+                                        child: WeatherCard(
+                                            weather: selectedForecast!.weather),
+                                      ),
                                     ),
+                                    Flexible(
+                                      flex: 1,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 6, right: 24, bottom: 12),
+                                        child: WaterTemperatureCard(
+                                            waterTemperature: waterTemperature),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 24, right: 24, bottom: 12),
+                                  child: WindCard(wind: selectedForecast!.wind),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 24, right: 24, bottom: 12),
+                                  child: WaveCard(
+                                    surf: selectedForecast!.surf,
+                                    swell: selectedForecast!.swell,
                                   ),
-                                );
-                              },
+                                ),
+                              ],
                             ),
-                          ],
-                        );
-                }),
+                          AnimatedBuilder(
+                            animation: _scrollController,
+                            builder: (BuildContext context, Widget? child) {
+                              return SizedBox(
+                                width: 200, // Specify a width here
+                                height: 200, // Specify a height here
+                                child: OverflowBox(
+                                  maxWidth: double.infinity,
+                                  alignment: const Alignment(4, 3),
+                                  child: Transform.rotate(
+                                    angle: ((math.pi * offset) / -1024),
+                                    child: const Icon(Icons.settings,
+                                        size: 48, color: Colors.red),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+              },
+            ),
           )
         ],
       ),

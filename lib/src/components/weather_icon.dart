@@ -19,6 +19,8 @@ class WeatherIcon extends StatelessWidget {
         return 'assets/icons/weather/partly-cloudy-day-rain.svg';
       case 'OVERCAST':
         return 'assets/icons/weather/overcast.svg';
+      case 'NIGHT_OVERCAST':
+        return 'assets/icons/weather/overcast-night.svg';
       case 'HEAVY_RAIN':
       case 'LIGHT_RAIN':
       case 'RAIN':
@@ -41,6 +43,7 @@ class WeatherIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(condition);
     return SvgPicture.asset(getIcon(),
         width: 36, height: 36, semanticsLabel: 'Meteo');
   }

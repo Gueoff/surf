@@ -3,7 +3,11 @@ import 'package:surf/src/models/surf.dart';
 import 'package:surf/src/models/swell.dart';
 import 'dart:math' as math;
 
-class WaveCard extends StatelessWidget {
+double _calculateDifference(double previousDirection, double newDirection) {
+  return (newDirection - previousDirection) / 360;
+}
+
+class WaveCard extends StatefulWidget {
   final Surf surf;
   final Swell swell;
   late final SwellElement swellMain;
@@ -12,6 +16,35 @@ class WaveCard extends StatelessWidget {
   WaveCard({super.key, required this.surf, required this.swell}) {
     swellMain = swell.swells[0];
     swellSecondary = swell.swells.length > 1 ? swell.swells[1] : swellMain;
+  }
+
+  @override
+  State<WaveCard> createState() => _WaveCardState();
+}
+
+class _WaveCardState extends State<WaveCard> {
+  late double turnsMain;
+  late double turnsSecondary;
+
+  @override
+  void initState() {
+    super.initState();
+    turnsMain = _calculateDifference(0, widget.swellMain.direction);
+    turnsSecondary = _calculateDifference(0, widget.swellSecondary.direction);
+  }
+
+  @override
+  void didUpdateWidget(WaveCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.swellMain.direction != oldWidget.swellMain.direction) {
+      turnsMain += _calculateDifference(
+          oldWidget.swellMain.direction, widget.swellMain.direction);
+    }
+
+    if (widget.swellSecondary.direction != oldWidget.swellSecondary.direction) {
+      turnsSecondary += _calculateDifference(
+          oldWidget.swellSecondary.direction, widget.swellSecondary.direction);
+    }
   }
 
   @override
@@ -46,9 +79,10 @@ class WaveCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(surf.humanRelation,
+                      Text(widget.surf.humanRelation,
                           style: Theme.of(context).textTheme.labelMedium),
-                      Text('${surf.min.toString()} - ${surf.max.toString()}m',
+                      Text(
+                          '${widget.surf.min.toString()} - ${widget.surf.max.toString()}m',
                           style: Theme.of(context).textTheme.labelMedium),
                     ],
                   ),
@@ -59,12 +93,13 @@ class WaveCard extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('${swellMain.period.toString()}s',
+                      Text('${widget.swellMain.period.toString()}s',
                           style: Theme.of(context).textTheme.labelMedium),
-                      Transform.rotate(
-                        angle: (swellMain.direction - 180) * (math.pi / 180),
+                      AnimatedRotation(
+                        duration: const Duration(milliseconds: 600),
+                        turns: turnsMain,
                         child: Icon(
-                          Icons.arrow_upward,
+                          Icons.arrow_downward,
                           color: Theme.of(context).colorScheme.tertiary,
                           size: 36,
                         ),
@@ -74,18 +109,18 @@ class WaveCard extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('${swellSecondary.period.toString()}s',
+                      Text('${widget.swellSecondary.period.toString()}s',
                           style: Theme.of(context)
                               .textTheme
                               .labelSmall!
                               .copyWith(
                                   color:
                                       Theme.of(context).colorScheme.onPrimary)),
-                      Transform.rotate(
-                        angle:
-                            (swellSecondary.direction - 180) * (math.pi / 180),
+                      AnimatedRotation(
+                        duration: const Duration(milliseconds: 600),
+                        turns: turnsSecondary,
                         child: Icon(
-                          Icons.arrow_upward,
+                          Icons.arrow_downward,
                           color: Theme.of(context).colorScheme.onPrimary,
                           size: 28,
                         ),

@@ -39,6 +39,6 @@ class Wind {
 
   @override
   String toString() {
-    return 'Wind($timestamp : $speed)';
+    return 'Wind($direction)';
   }
 }
