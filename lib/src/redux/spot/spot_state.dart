@@ -31,7 +31,7 @@ class SpotState {
   static SpotState fromJson(dynamic json) {
     return SpotState(
       status: Status.idle,
-      spotFavorites: json["spotFavorites"] != null
+      spotFavorites: json?["spotFavorites"] != null
           ? List<Spot>.from(json["spotFavorites"].map((x) => Spot.fromJson(x)))
           : [],
     );

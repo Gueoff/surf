@@ -24,7 +24,7 @@ void main() async {
 
   final String storagePath = await getSurfApplicationDocumentsDirectory();
   final persistor = Persistor<AppState>(
-    storage: FileStorage(File("${storagePath}/state.json")),
+    storage: FileStorage(File("$storagePath/state.json")),
     serializer: JsonSerializer<AppState>(AppState.fromJson),
     debug: true,
   );

@@ -19,12 +19,15 @@ class AppState {
     required SpotState spotState,
   }) {
     return AppState(
-      spotState: spotState ?? this.spotState,
+      spotState: spotState,
     );
   }
 
   static AppState fromJson(dynamic json) {
-    return AppState(spotState: SpotState.fromJson(json["spotState"]));
+    SpotState initSpotState = json == null
+        ? SpotState.initial()
+        : SpotState.fromJson(json?["spotState"]);
+    return AppState(spotState: initSpotState);
   }
 
   dynamic toJson() {
