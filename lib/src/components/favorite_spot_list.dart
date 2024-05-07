@@ -65,26 +65,31 @@ class FavoriteSpotList extends StatelessWidget {
                     ),
                     Positioned(
                         left: 12,
-                        bottom: 48,
-                        child: Text(spot.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary))),
-                    Positioned(
-                        left: 12,
                         bottom: 24,
-                        child: Text(spot.address,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary))),
+                        width: 200 - 24,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              spot.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                            ),
+                            Text(spot.address,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary))
+                          ],
+                        )),
                   ],
                 ),
               ),

@@ -11,7 +11,7 @@ class WindCard extends StatefulWidget {
   const WindCard({super.key, required this.wind});
 
   @override
-  _WindCardState createState() => _WindCardState();
+  State<WindCard> createState() => _WindCardState();
 }
 
 class _WindCardState extends State<WindCard> {

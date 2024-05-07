@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:surf/src/models/spot.dart';
 import 'package:surf/src/models/forecast.dart';
 import 'package:surf/src/models/rating.dart';
@@ -9,6 +12,7 @@ import 'package:surf/src/models/swell.dart';
 import 'package:surf/src/models/weather.dart';
 import 'package:surf/src/models/wind.dart';
 import 'package:surf/src/screens/spotDetails/detail_silver.dart';
+import 'package:surf/src/screens/spotDetails/tide_card.dart';
 import 'package:surf/src/screens/spotDetails/timeline_card.dart';
 import 'package:surf/src/screens/spotDetails/water_temperature_card.dart';
 import 'package:surf/src/screens/spotDetails/wave_card.dart';
@@ -16,7 +20,6 @@ import 'package:surf/src/screens/spotDetails/wind_card.dart';
 import 'package:surf/src/screens/spotDetails/weather_card.dart';
 import 'package:surf/src/services/api_service.dart';
 import 'package:intl/intl.dart';
-import 'dart:math' as math;
 
 List<Forecast> groupEntitiesByTimestamp(
     List<Rating> ratingEntities,
@@ -27,7 +30,7 @@ List<Forecast> groupEntitiesByTimestamp(
     List<Wind> windEntities) {
   List<Forecast> forecastList = [];
 
-  ratingEntities.forEach((Rating ratingEntity) {
+  for (var ratingEntity in ratingEntities) {
     int timestamp = ratingEntity.timestamp;
 
     Tide matchingTide =
@@ -44,23 +47,23 @@ List<Forecast> groupEntitiesByTimestamp(
     // Create a new Forecast entity and add it to the list
     forecastList.add(Forecast.groupModels(ratingEntity, matchingSurf,
         matchingSwell, matchingTide, matchingWeather, matchingWind));
-  });
+  }
 
   return forecastList;
 }
 
 // Trouver l'indice de l'élément le plus proche de la date actuelle.
-int findNearestIndex(List<Forecast> forecastData) {
-  var currentDate = DateTime.now().millisecondsSinceEpoch / 1000;
+int findNearestIndex(List<Forecast> forecastData, double timestamp) {
+  //var currentDate = DateTime.now().millisecondsSinceEpoch / 1000;
   int minIndex = 0;
   int maxIndex = forecastData.length - 1;
 
   // var ratingDate = DateTime.fromMillisecondsSinceEpoch(forecastData[i].timestamp * 1000);
   // Cas particuliers pour les extrémités de la liste.
-  if (currentDate < forecastData[minIndex].timestamp) {
+  if (timestamp < forecastData[minIndex].timestamp) {
     return minIndex;
   }
-  if (currentDate > forecastData[maxIndex].timestamp) {
+  if (timestamp > forecastData[maxIndex].timestamp) {
     return maxIndex;
   }
 
@@ -69,9 +72,9 @@ int findNearestIndex(List<Forecast> forecastData) {
     int midIndex = (minIndex + maxIndex) ~/ 2;
     var midDate = forecastData[midIndex].timestamp;
 
-    if (midDate < currentDate) {
+    if (midDate < timestamp) {
       minIndex = midIndex + 1;
-    } else if (midDate > currentDate) {
+    } else if (midDate > timestamp) {
       maxIndex = midIndex - 1;
     } else {
       return midIndex; // Date exacte trouvée.
@@ -82,13 +85,12 @@ int findNearestIndex(List<Forecast> forecastData) {
   var beforeDate = forecastData[maxIndex].timestamp;
   var afterDate = forecastData[minIndex].timestamp;
 
-  var beforeDifference = currentDate - beforeDate;
-  var afterDifference = afterDate - currentDate;
+  var beforeDifference = timestamp - beforeDate;
+  var afterDifference = afterDate - timestamp;
   return (beforeDifference <= afterDifference) ? maxIndex : minIndex;
 }
 
 double timelineCardWidth = 110;
-double marginHorizontal = 24.0;
 
 class SpotDetailsScreen extends StatefulWidget {
   final Spot spot;
@@ -151,9 +153,10 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
         waterTemperature = responseWaterTemperature;
       });
 
+      _scrollToCurrentDate();
       return forecastData;
     } catch (error) {
-      print(error);
+      log(error.toString());
     }
 
     return [];
@@ -161,6 +164,9 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   /// Select a forecast in the list
   void onPressForecast(Forecast forecast) {
+    var index = findNearestIndex(forecastData, forecast.timestamp.toDouble());
+    _scrollTo(index);
+
     setState(() {
       selectedForecast = forecast;
     });
@@ -169,7 +175,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   /// Scroll horizontal event
   onScroll() {
     final itemWidth = timelineCardWidth + 12;
-    final middlePosition = _scrollController.offset + screenWidth / 2 - 18;
+    final middlePosition = _scrollController.offset + 6;
 
     int index = (middlePosition / itemWidth).floor();
     final forecast = forecastData[index];
@@ -186,13 +192,19 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   /// Scroll to the current time.
   void _scrollToCurrentDate() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var index = findNearestIndex(forecastData);
-      _scrollController.animateTo(
-        index * timelineCardWidth,
-        duration: const Duration(seconds: 1),
-        curve: Curves.easeInOut,
-      );
+      var currentDate = DateTime.now().millisecondsSinceEpoch / 1000;
+
+      var index = findNearestIndex(forecastData, currentDate);
+      _scrollTo(index);
     });
+  }
+
+  void _scrollTo(int index) {
+    _scrollController.animateTo(
+      index * (timelineCardWidth + 12),
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.fastOutSlowIn,
+    );
   }
 
   @override
@@ -232,33 +244,57 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(dateFormatter.format(currentDate),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium),
-                                FilledButton(
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.secondary,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16),
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(14)),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    _scrollToCurrentDate();
-                                  },
-                                  child: Text('Now',
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(dateFormatter.format(currentDate),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .labelLarge!
-                                          .copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary)),
+                                          .titleMedium),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: selectedForecast != null
+                                      ? Text(
+                                          timeFormatter.format(DateTime
+                                              .fromMillisecondsSinceEpoch(
+                                                  selectedForecast!.timestamp *
+                                                      1000)),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Container(),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    alignment: Alignment.topRight,
+                                    child: FilledButton(
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16),
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(14)),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        _scrollToCurrentDate();
+                                      },
+                                      child: Icon(
+                                        Icons.schedule,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSecondary,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -270,8 +306,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                     const EdgeInsets.symmetric(vertical: 20),
                                 height: 150,
                                 child: ListView.separated(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 24,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: screenWidth / 2,
                                   ),
                                   controller: _scrollController,
                                   itemBuilder:
@@ -316,19 +352,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                           if (selectedForecast != null)
                             Column(
                               children: [
-                                Text(
-                                    timeFormatter.format(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            selectedForecast!.timestamp *
-                                                1000)),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge!
-                                        .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary,
-                                        )),
+                                const TideCard(),
                                 Row(
                                   children: [
                                     Flexible(
@@ -369,16 +393,23 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                           AnimatedBuilder(
                             animation: _scrollController,
                             builder: (BuildContext context, Widget? child) {
+                              var offsetTmp = offset / 4;
                               return SizedBox(
-                                width: 200, // Specify a width here
-                                height: 200, // Specify a height here
+                                width: 36, // Specify a width here
+                                height: 36, // Specify a height here
                                 child: OverflowBox(
                                   maxWidth: double.infinity,
                                   alignment: const Alignment(4, 3),
-                                  child: Transform.rotate(
-                                    angle: ((math.pi * offset) / -1024),
-                                    child: const Icon(Icons.settings,
-                                        size: 48, color: Colors.red),
+                                  child: Transform.translate(
+                                    offset: Offset(
+                                        0, offsetTmp <= 20 ? -offsetTmp : -20),
+
+                                    // angle: ((math.pi * offset) / -1024),
+                                    child: SvgPicture.asset(
+                                        'assets/icons/weather/clear-day.svg',
+                                        width: 36,
+                                        height: 36,
+                                        semanticsLabel: 'Meteo'),
                                   ),
                                 ),
                               );

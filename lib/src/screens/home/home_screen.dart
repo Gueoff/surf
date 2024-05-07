@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:surf/src/components/favorite_spot_list.dart';
 import 'package:surf/src/components/header.dart';
@@ -40,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       return response;
     } catch (error) {
-      print(error);
+      log(error.toString());
     }
     return null;
   }

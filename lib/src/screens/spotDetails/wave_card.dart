@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:surf/src/models/surf.dart';
 import 'package:surf/src/models/swell.dart';
-import 'dart:math' as math;
 
 double _calculateDifference(double previousDirection, double newDirection) {
   return (newDirection - previousDirection) / 360;
