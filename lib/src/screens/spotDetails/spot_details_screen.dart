@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:surf/src/components/forecast_rating_indicator.dart';
 import 'package:surf/src/models/spot.dart';
 import 'package:surf/src/models/forecast.dart';
 import 'package:surf/src/models/rating.dart';
@@ -54,12 +55,8 @@ List<Forecast> groupEntitiesByTimestamp(
 
 // Trouver l'indice de l'élément le plus proche de la date actuelle.
 int findNearestIndex(List<Forecast> forecastData, double timestamp) {
-  //var currentDate = DateTime.now().millisecondsSinceEpoch / 1000;
   int minIndex = 0;
   int maxIndex = forecastData.length - 1;
-
-  // var ratingDate = DateTime.fromMillisecondsSinceEpoch(forecastData[i].timestamp * 1000);
-  // Cas particuliers pour les extrémités de la liste.
   if (timestamp < forecastData[minIndex].timestamp) {
     return minIndex;
   }
@@ -90,13 +87,13 @@ int findNearestIndex(List<Forecast> forecastData, double timestamp) {
   return (beforeDifference <= afterDifference) ? maxIndex : minIndex;
 }
 
-double timelineCardWidth = 110;
+double timelineCardWidth = 68;
+double separatorWidth = 4;
 
 class SpotDetailsScreen extends StatefulWidget {
   final Spot spot;
 
   const SpotDetailsScreen({super.key, required this.spot});
-  //const SpotDetailsScreen({super.key});
 
   @override
   State<SpotDetailsScreen> createState() => _SpotDetailsScreenState();
@@ -112,6 +109,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   late List<Forecast> forecastData;
   DateTime currentDate = DateTime.now();
   late WaterTemperature waterTemperature;
+  late List<Tide> tides;
   double screenWidth = 0.0;
 
   @override
@@ -151,6 +149,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
       setState(() {
         waterTemperature = responseWaterTemperature;
+        tides = responseTide.where((tide) => tide.type != 'NORMAL').toList();
       });
 
       _scrollToCurrentDate();
@@ -174,8 +173,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   /// Scroll horizontal event
   onScroll() {
-    final itemWidth = timelineCardWidth + 12;
-    final middlePosition = _scrollController.offset + 6;
+    final itemWidth = timelineCardWidth + separatorWidth;
+    final middlePosition = _scrollController.offset + separatorWidth / 2;
 
     int index = (middlePosition / itemWidth).floor();
     final forecast = forecastData[index];
@@ -201,7 +200,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   void _scrollTo(int index) {
     _scrollController.animateTo(
-      index * (timelineCardWidth + 12),
+      index * (timelineCardWidth + separatorWidth) + timelineCardWidth / 2,
       duration: const Duration(milliseconds: 800),
       curve: Curves.fastOutSlowIn,
     );
@@ -210,6 +209,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
+    // print(screenWidth); // 411
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -317,21 +317,29 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                     return Column(
                                       children: [
                                         SizedBox(
-                                          width: forecast.timestamp ==
-                                                  selectedForecast?.timestamp
-                                              ? timelineCardWidth
-                                              : timelineCardWidth,
-                                          child: TimelineCard(
-                                              forecast: forecast,
-                                              onCardTap: onPressForecast),
+                                          width: timelineCardWidth,
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 4),
+                                                child: ForecastRatingIndicator(
+                                                    ratingValue:
+                                                        forecast.rating.value),
+                                              ),
+                                              TimelineCard(
+                                                  forecast: forecast,
+                                                  onCardTap: onPressForecast),
+                                            ],
+                                          ),
                                         )
                                       ],
                                     );
                                   },
                                   itemCount: snapshot.data!.length,
                                   separatorBuilder: (context, index) =>
-                                      const VerticalDivider(
-                                    width: 12,
+                                      VerticalDivider(
+                                    width: separatorWidth,
                                     thickness: 2,
                                     color: Colors.transparent,
                                   ),
@@ -349,10 +357,13 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                               ),
                             ],
                           ),
+                          TideCard(
+                            animation: _scrollController,
+                            tides: tides,
+                          ),
                           if (selectedForecast != null)
                             Column(
                               children: [
-                                const TideCard(),
                                 Row(
                                   children: [
                                     Flexible(

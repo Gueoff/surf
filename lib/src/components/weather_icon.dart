@@ -16,9 +16,10 @@ class WeatherIcon extends StatelessWidget {
       case 'CLOUDY':
       case 'MOSTLY_CLOUDY':
         return 'assets/icons/weather/cloudy.svg';
-      case 'LIGHT_SHOWERS':
+      case 'BRIEF_SHOWERS':
       case 'BRIEF_SHOWERS_POSSIBLE':
         return 'assets/icons/weather/drizzle.svg';
+      case 'LIGHT_SHOWERS':
       case 'LIGHT_SHOWERS_POSSIBLE':
         return 'assets/icons/weather/partly-cloudy-day-rain.svg';
       case 'OVERCAST':

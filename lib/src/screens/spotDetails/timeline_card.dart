@@ -45,11 +45,11 @@ class TimelineCard extends StatelessWidget {
                     topRight: Radius.circular(15)),
               ),
               child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 16, right: 24, bottom: 16, left: 24),
+                padding:
+                    const EdgeInsets.only(top: 8, right: 4, bottom: 8, left: 4),
                 child: Center(
                   child: Text(timeFormatter.format(dateTime),
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
                             color: Theme.of(context).colorScheme.onSecondary,
                           )),
                 ),
@@ -57,7 +57,8 @@ class TimelineCard extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 12, bottom: 24),
-              child: ForecastRating(ratingValue: forecast.rating.value),
+              child: Center(
+                  child: ForecastRating(ratingValue: forecast.rating.value)),
             ),
           ],
         ),

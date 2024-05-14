@@ -5,33 +5,63 @@ class ForecastRating extends StatelessWidget {
 
   const ForecastRating({super.key, required this.ratingValue});
 
-  Color getColor() {
+  // Compute value to get more realistic score.
+  int getScore() {
     switch (ratingValue) {
       case 0:
-        return const Color(0xFFf4496d);
+        return 0;
       case 1:
-        return const Color(0xFFFF9500);
+        return 2;
       case 2:
-        return const Color(0xFFffcd1e);
+        return 3;
       case 3:
-        return const Color(0xFF0bd674);
+        return 4;
       case 4:
-        return const Color(0xFF009371);
+        return 5;
       case 5:
-        return const Color(0xFF6851f4);
+        return 6;
       case 6:
-        return const Color(0xFF5c00d0);
+        return 6;
       default:
-        return const Color(0XFFFFFFFF);
+        return 0;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Text('${(ratingValue + 1).toString()}/7',
-        style: Theme.of(context)
-            .textTheme
-            .displayMedium!
-            .copyWith(color: getColor()));
+    int value = getScore();
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          value == 0
+              ? Icons.star_border
+              : value == 1
+                  ? Icons.star_half
+                  : Icons.star, // 2
+          color: Colors.yellow,
+          size: 20,
+        ),
+        Icon(
+          value <= 2
+              ? Icons.star_border
+              : value == 3
+                  ? Icons.star_half
+                  : Icons.star,
+          color: Colors.yellow,
+          size: 20,
+        ),
+        Icon(
+          value <= 4
+              ? Icons.star_border
+              : value == 5
+                  ? Icons.star_half
+                  : Icons.star,
+          color: Colors.yellow,
+          size: 20,
+        ),
+      ],
+    );
   }
 }

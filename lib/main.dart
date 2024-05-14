@@ -6,15 +6,11 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:surf/src/redux/app_state.dart';
 import 'package:surf/src/redux/store.dart';
-import 'package:surf/src/services/router_service.dart';
 import 'package:surf/src/theme/theme.dart';
 import 'package:surf/src/screens/home/home_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:redux_logging/redux_logging.dart';
-import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux_persist/redux_persist.dart';
-
-import 'package:flutter/foundation.dart';
 import 'package:surf/src/utils/file.dart';
 
 void main() async {
@@ -35,7 +31,10 @@ void main() async {
   final store = Store<AppState>(
     appReducer,
     initialState: initialState ?? AppState.initial(),
-    middleware: [persistor.createMiddleware()],
+    middleware: [
+      persistor.createMiddleware(),
+      LoggingMiddleware.printer().call
+    ],
     //middleware: [thunkMiddleware],
   );
 
@@ -55,7 +54,6 @@ class App extends StatelessWidget {
         title: 'Surf with me',
         theme: ThemeStyle.lightTheme,
         home: const HomeScreen(),
-        // onGenerateRoute: RouterService.generateRoute,
       ),
     );
   }
