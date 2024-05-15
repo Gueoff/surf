@@ -1,22 +1,20 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:surf/src/models/tide.dart';
 import 'dart:ui' as ui;
-
 import 'package:surf/src/screens/spotDetails/spot_details_screen.dart';
 
-class TideCard extends StatefulWidget {
+class TideChart extends StatefulWidget {
   final ScrollController animation;
   final List<Tide> tides;
 
-  const TideCard({super.key, required this.animation, required this.tides});
+  const TideChart({super.key, required this.animation, required this.tides});
 
   @override
-  State<TideCard> createState() => _TideCardState();
+  State<TideChart> createState() => _TideChartState();
 }
 
-class _TideCardState extends State<TideCard> {
+class _TideChartState extends State<TideChart> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -43,25 +41,13 @@ class SinePainter extends CustomPainter {
 
   SinePainter(this.offset, this.tides, this.color);
 
-  double timestampToDouble(int timestamp) {
-    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-
-    // Extraire les heures et les minutes de l'objet DateTime
-    int hours = dateTime.hour;
-    int minutes = dateTime.minute;
-    //print('$hours : $minutes');
-
-    // Convertir les heures et les minutes en un nombre double
-    double result = hours + (minutes / 60);
-
-    return result;
-  }
-
   @override
   void paint(Canvas canvas, Size size) {
     int length = tides.length;
     DateTime now = DateTime.now();
     DateTime startingDate = DateTime(now.year, now.month, now.day, 0, 0, 0);
+    List<Offset> paragraphPositions = [];
+    int wordingWidth = 20;
 
     Paint gradientPaint = Paint()
       ..strokeWidth = 3
@@ -70,15 +56,13 @@ class SinePainter extends CustomPainter {
 
     Path path = Path()..moveTo(0, size.height / 2);
 
-    for (int i = 0; i <= length - 1; i++) {
+    for (int i = 0; i < length; i++) {
       Tide currentTide = tides[i];
       DateTime datetime =
           DateTime.fromMillisecondsSinceEpoch(currentTide.timestamp * 1000);
       String time = timeFormatter.format(datetime);
-      //var d = timestampToDouble(currentTide.timestamp);
       int dateOffset = datetime.difference(startingDate).inMinutes;
 
-      // Define wording for high and low tides.
       final ui.ParagraphStyle paragraphStyle = ui.ParagraphStyle(
         fontSize: 12,
       );
@@ -90,23 +74,35 @@ class SinePainter extends CustomPainter {
       paragraph.layout(ui.ParagraphConstraints(width: size.width));
 
       double cardWidth = timelineCardWidth + separatorWidth;
-      // Draw the tide.
       double screenOffset = screenWidth / 2;
 
+      double x =
+          screenOffset + (dateOffset * cardWidth / 180) - offset - wordingWidth;
+      double y = currentTide.type == 'LOW' ? size.height - 20 : 20;
+      // Draw paragraph times.
       canvas.drawParagraph(
         paragraph,
-        Offset(screenOffset + (dateOffset * cardWidth / 180) - offset,
-            currentTide.type == 'LOW' ? size.height - 20 : 20),
+        Offset(x, y),
       );
 
-      // Draw the curve.
-      path.lineTo(
-        i * size.width / (length - 1),
-        size.height / 2 +
-            sin((offset / 50) + i * pi / 10) * (size.height / 2 - 3),
+      // Stocker la position du paragraphe
+      paragraphPositions.add(
+        Offset(x + 10, currentTide.type == 'LOW' ? size.height : 0),
       );
     }
-    path.lineTo(size.width, size.height / 2);
+
+    // Relier les points de paragraphe avec des courbes de Bézier cubiques
+    for (int i = 0; i < paragraphPositions.length - 1; i++) {
+      // Calculer les points de contrôle pour la courbe de Bézier cubique
+      Offset start = paragraphPositions[i];
+      Offset end = paragraphPositions[i + 1];
+      double dx = (end.dx - start.dx) / 2;
+      Offset ctrl1 = Offset(start.dx + dx, start.dy);
+      Offset ctrl2 = Offset(end.dx - dx, end.dy);
+
+      // Dessiner la courbe de Bézier cubique
+      path.cubicTo(ctrl1.dx, ctrl1.dy, ctrl2.dx, ctrl2.dy, end.dx, end.dy);
+    }
 
     canvas.drawPath(path, gradientPaint);
   }

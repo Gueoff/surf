@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:surf/src/components/forecast_rating_indicator.dart';
@@ -13,7 +12,7 @@ import 'package:surf/src/models/swell.dart';
 import 'package:surf/src/models/weather.dart';
 import 'package:surf/src/models/wind.dart';
 import 'package:surf/src/screens/spotDetails/detail_silver.dart';
-import 'package:surf/src/screens/spotDetails/tide_card.dart';
+import 'package:surf/src/screens/spotDetails/tide_chart.dart';
 import 'package:surf/src/screens/spotDetails/timeline_card.dart';
 import 'package:surf/src/screens/spotDetails/water_temperature_card.dart';
 import 'package:surf/src/screens/spotDetails/wave_card.dart';
@@ -240,7 +239,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 24, right: 24),
+                            padding: const EdgeInsets.only(
+                                left: 24, right: 24, bottom: 12),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -300,66 +300,81 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                             ),
                           ),
                           Stack(
+                            alignment: Alignment.bottomRight,
                             children: [
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 20),
-                                height: 150,
-                                child: ListView.separated(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: screenWidth / 2,
-                                  ),
-                                  controller: _scrollController,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    final forecast = snapshot.data![index];
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 120,
+                                      child: ListView.separated(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: screenWidth / 2,
+                                        ),
+                                        controller: _scrollController,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          final forecast =
+                                              snapshot.data![index];
 
-                                    return Column(
-                                      children: [
-                                        SizedBox(
-                                          width: timelineCardWidth,
-                                          child: Column(
+                                          return Column(
                                             children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 4),
-                                                child: ForecastRatingIndicator(
-                                                    ratingValue:
-                                                        forecast.rating.value),
-                                              ),
-                                              TimelineCard(
-                                                  forecast: forecast,
-                                                  onCardTap: onPressForecast),
+                                              SizedBox(
+                                                width: timelineCardWidth,
+                                                child: Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 4),
+                                                      child:
+                                                          ForecastRatingIndicator(
+                                                              ratingValue:
+                                                                  forecast
+                                                                      .rating
+                                                                      .value),
+                                                    ),
+                                                    TimelineCard(
+                                                        forecast: forecast,
+                                                        onCardTap:
+                                                            onPressForecast),
+                                                  ],
+                                                ),
+                                              )
                                             ],
-                                          ),
-                                        )
-                                      ],
-                                    );
-                                  },
-                                  itemCount: snapshot.data!.length,
-                                  separatorBuilder: (context, index) =>
-                                      VerticalDivider(
-                                    width: separatorWidth,
-                                    thickness: 2,
-                                    color: Colors.transparent,
-                                  ),
-                                  scrollDirection: Axis.horizontal,
+                                          );
+                                        },
+                                        itemCount: snapshot.data!.length,
+                                        separatorBuilder: (context, index) =>
+                                            VerticalDivider(
+                                          width: separatorWidth,
+                                          thickness: 2,
+                                          color: Colors.transparent,
+                                        ),
+                                        scrollDirection: Axis.horizontal,
+                                      ),
+                                    ),
+                                    TideChart(
+                                      animation: _scrollController,
+                                      tides: tides,
+                                    ),
+                                  ],
                                 ),
                               ),
                               Positioned(
                                 left: screenWidth / 2,
                                 top: 0,
-                                child: Container(
-                                  width: 1,
-                                  height: 200,
-                                  color: Colors.red,
+                                child: Opacity(
+                                  opacity: 0.7,
+                                  child: Container(
+                                    width: 1,
+                                    height: 300,
+                                    color: Colors.red,
+                                  ),
                                 ),
                               ),
                             ],
-                          ),
-                          TideCard(
-                            animation: _scrollController,
-                            tides: tides,
                           ),
                           if (selectedForecast != null)
                             Column(
