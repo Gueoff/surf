@@ -9,15 +9,17 @@ class TimelineCard extends StatelessWidget {
   final Function(Forecast) onCardTap;
   final timeFormatter = DateFormat.Hm();
   late final DateTime dateTime;
+  late final bool isPast;
 
   TimelineCard({super.key, required this.forecast, required this.onCardTap}) {
     dateTime = DateTime.fromMillisecondsSinceEpoch(forecast.timestamp * 1000);
+    isPast = DateTime.now().difference(dateTime).inHours > 0;
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
+      color: isPast ? Colors.blueGrey : Colors.white,
       elevation: 8,
       margin: EdgeInsets.zero,
       shadowColor: const Color.fromRGBO(97, 216, 240, 0.2),

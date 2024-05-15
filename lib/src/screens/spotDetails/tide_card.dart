@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:surf/src/models/tide.dart';
 import 'dart:ui' as ui;
 
+import 'package:surf/src/screens/spotDetails/spot_details_screen.dart';
+
 class TideCard extends StatefulWidget {
   final ScrollController animation;
   final List<Tide> tides;
@@ -47,7 +49,7 @@ class SinePainter extends CustomPainter {
     // Extraire les heures et les minutes de l'objet DateTime
     int hours = dateTime.hour;
     int minutes = dateTime.minute;
-    print('$hours : $minutes');
+    //print('$hours : $minutes');
 
     // Convertir les heures et les minutes en un nombre double
     double result = hours + (minutes / 60);
@@ -58,21 +60,23 @@ class SinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     int length = tides.length;
+    DateTime now = DateTime.now();
+    DateTime startingDate = DateTime(now.year, now.month, now.day, 0, 0, 0);
+
     Paint gradientPaint = Paint()
       ..strokeWidth = 3
       ..color = color
       ..style = PaintingStyle.stroke;
 
     Path path = Path()..moveTo(0, size.height / 2);
-    int first =
-        DateTime.fromMillisecondsSinceEpoch(tides[0].timestamp * 1000).day;
 
     for (int i = 0; i <= length - 1; i++) {
       Tide currentTide = tides[i];
       DateTime datetime =
           DateTime.fromMillisecondsSinceEpoch(currentTide.timestamp * 1000);
       String time = timeFormatter.format(datetime);
-      var d = timestampToDouble(currentTide.timestamp);
+      //var d = timestampToDouble(currentTide.timestamp);
+      int dateOffset = datetime.difference(startingDate).inMinutes;
 
       // Define wording for high and low tides.
       final ui.ParagraphStyle paragraphStyle = ui.ParagraphStyle(
@@ -84,15 +88,14 @@ class SinePainter extends CustomPainter {
       paragraphBuilder.addText(time);
       ui.Paragraph paragraph = paragraphBuilder.build();
       paragraph.layout(ui.ParagraphConstraints(width: size.width));
-// Offset((screenWidth / 2) + i * size.width / 2 - (offset * 2),
-      int w = 68;
+
+      double cardWidth = timelineCardWidth + separatorWidth;
       // Draw the tide.
-      var d = timestampToDouble(currentTide.timestamp);
-      print('her ${d}');
+      double screenOffset = screenWidth / 2;
 
       canvas.drawParagraph(
         paragraph,
-        Offset((screenWidth / 2) - offset + (d * i * w / 3),
+        Offset(screenOffset + (dateOffset * cardWidth / 180) - offset,
             currentTide.type == 'LOW' ? size.height - 20 : 20),
       );
 
@@ -100,7 +103,7 @@ class SinePainter extends CustomPainter {
       path.lineTo(
         i * size.width / (length - 1),
         size.height / 2 +
-            sin((offset / 50) + i * pi / 15) * (size.height / 2 - 3),
+            sin((offset / 50) + i * pi / 10) * (size.height / 2 - 3),
       );
     }
     path.lineTo(size.width, size.height / 2);
