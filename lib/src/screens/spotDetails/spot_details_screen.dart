@@ -119,7 +119,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     future = onGetSpotForecasts(widget.spot.id);
   }
 
-  /// Get the spot forecast.
+  // Get the spot forecast.
   Future<List<Forecast>> onGetSpotForecasts(String spotId) async {
     final apiService = ApiService();
     late List<Rating> responseRating;
@@ -160,7 +160,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     return [];
   }
 
-  /// Select a forecast in the list
+  // Select a forecast in the list
   void onPressForecast(Forecast forecast) {
     var index = findNearestIndex(forecastData, forecast.timestamp.toDouble());
     _scrollTo(index);
@@ -170,7 +170,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     });
   }
 
-  /// Scroll horizontal event
+  // Scroll horizontal event
   onScroll() {
     final itemWidth = timelineCardWidth + separatorWidth;
     final middlePosition = _scrollController.offset + separatorWidth / 2;
@@ -187,7 +187,22 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     }
   }
 
-  /// Scroll to the current time.
+  // Get the current time in the timeline.
+  getCurrentTime() {
+    double hours = (offset + separatorWidth / 2) /
+        (timelineCardWidth + separatorWidth) *
+        3;
+    int totalSeconds = (hours * 3600).toInt();
+    int roundedHour = ((totalSeconds ~/ 3600 / 1).round() * 1).toInt();
+    DateTime now = DateTime.now();
+    DateTime startTime = DateTime(now.year, now.month, now.day, 0, 0, 0);
+    DateTime exactTime =
+        startTime.add(Duration(hours: roundedHour, minutes: 0));
+
+    return timeFormatter.format(exactTime);
+  }
+
+  // Scroll to the current time.
   void _scrollToCurrentDate() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var currentDate = DateTime.now().millisecondsSinceEpoch / 1000;
@@ -197,6 +212,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     });
   }
 
+  // Scroll to an index in the timeline.
   void _scrollTo(int index) {
     _scrollController.animateTo(
       index * (timelineCardWidth + separatorWidth) + timelineCardWidth / 2,
@@ -208,7 +224,6 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
-    // print(screenWidth); // 411
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -255,10 +270,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                   flex: 1,
                                   child: selectedForecast != null
                                       ? Text(
-                                          timeFormatter.format(DateTime
-                                              .fromMillisecondsSinceEpoch(
-                                                  selectedForecast!.timestamp *
-                                                      1000)),
+                                          getCurrentTime(),
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleMedium,
@@ -303,7 +315,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                             alignment: Alignment.bottomRight,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
+                                padding:
+                                    const EdgeInsets.only(bottom: 12, top: 4),
                                 child: Column(
                                   children: [
                                     SizedBox(
@@ -366,7 +379,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                 left: screenWidth / 2,
                                 top: 0,
                                 child: Opacity(
-                                  opacity: 0.7,
+                                  opacity: 0.5,
                                   child: Container(
                                     width: 1,
                                     height: 300,

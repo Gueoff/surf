@@ -44,13 +44,15 @@ class SinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     int length = tides.length;
-    DateTime now = DateTime.now();
-    DateTime startingDate = DateTime(now.year, now.month, now.day, 0, 0, 0);
+    DateTime firstTideDateTime =
+        DateTime.fromMillisecondsSinceEpoch(tides[0].timestamp * 1000);
+    DateTime startingDate = DateTime(firstTideDateTime.year,
+        firstTideDateTime.month, firstTideDateTime.day, 0, 0, 0);
     List<Offset> paragraphPositions = [];
     int wordingWidth = 20;
 
     Paint gradientPaint = Paint()
-      ..strokeWidth = 3
+      ..strokeWidth = 2
       ..color = color
       ..style = PaintingStyle.stroke;
 

@@ -27,29 +27,35 @@ class WeatherIcon extends StatelessWidget {
       case 'HEAVY_RAIN':
       case 'LIGHT_RAIN':
       case 'RAIN':
+      case 'SHOWERS':
         return 'assets/icons/weather/rain.svg';
       case 'HEAVY_THUNDER_STORMS':
         return 'assets/icons/weather/lightning-bolt.svg';
       case 'THUNDER_SHOWERS':
         return 'assets/icons/weather/thunderstorms-rain.svg';
+      case 'MIST':
+        return 'assets/icons/weather/mist.svg';
       case 'NIGHT_OVERCAST':
         return 'assets/icons/weather/overcast-night.svg';
       case 'NIGHT_CLEAR':
+      case 'NIGHT_MOSTLY_CLEAR':
         return 'assets/icons/weather/clear-night.svg';
       case 'NIGHT_CLOUDY':
       case 'NIGHT_MOSTLY_CLOUDY':
         return 'assets/icons/weather/partly-cloudy-night.svg';
       case 'NIGHT_LIGHT_RAIN':
-        return 'assets/icons/weather/partly-cloudy-night-drizzle.svg';
       case 'NIGHT_LIGHT_SHOWERS':
       case 'NIGHT_LIGHT_SHOWERS_POSSIBLE':
+        return 'assets/icons/weather/partly-cloudy-night-drizzle.svg';
+      case 'NIGHT_HEAVY_SHOWERS':
       case 'NIGHT_BRIEF_SHOWERS':
       case 'NIGHT_BRIEF_SHOWERS_POSSIBLE':
         return 'assets/icons/weather/partly-cloudy-night-rain.svg';
       case 'NIGHT_THUNDER_STORMS':
       case 'NIGHT_HEAVY_THUNDER_STORMS':
         return 'assets/icons/weather/thunderstorms-night.svg';
-
+      case 'NIGHT_FOG':
+        return 'assets/icons/weather/partly-cloudy-night-fog.svg';
       default:
         return 'assets/icons/weather/not-available.svg';
     }
