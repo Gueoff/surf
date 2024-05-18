@@ -18,13 +18,25 @@ class FavoriteButton extends StatefulWidget {
   State<FavoriteButton> createState() => _FavoriteButtonState();
 }
 
-class _FavoriteButtonState extends State<FavoriteButton> {
+class _FavoriteButtonState extends State<FavoriteButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+      duration: const Duration(milliseconds: 200), vsync: this, value: 1.0);
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
   void onAddToFavorites() {
     StoreProvider.of<AppState>(context).dispatch(AddSpotAction(widget.spot));
+    _controller.reverse().then((value) => _controller.forward());
   }
 
   void onRemoveToFavorites() {
     StoreProvider.of<AppState>(context).dispatch(RemoveSpotAction(widget.spot));
+    _controller.reverse().then((value) => _controller.forward());
   }
 
   @override
@@ -48,10 +60,14 @@ class _FavoriteButtonState extends State<FavoriteButton> {
                 color: const Color.fromRGBO(208, 217, 222, 0.6),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: Icon(
-                Icons.star,
-                color: isFavorite ? Colors.yellow : Colors.white,
-                size: 20,
+              child: ScaleTransition(
+                scale: Tween(begin: 0.7, end: 1.0).animate(CurvedAnimation(
+                    parent: _controller, curve: Curves.easeOut)),
+                child: Icon(
+                  Icons.star,
+                  color: isFavorite ? Colors.yellow : Colors.white,
+                  size: 20,
+                ),
               ),
             ),
           );

@@ -9,6 +9,8 @@ class FavoriteSpotList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(spots);
+
     return SizedBox(
       height: 300,
       child: ListView.separated(
@@ -55,10 +57,18 @@ class FavoriteSpotList extends StatelessWidget {
                             end: Alignment.center,
                           ).createShader(bounds),
                           blendMode: BlendMode.darken,
-                          child: Image.asset(
+                          child: Image.network(
+                            'https://surf.leaff.me/image/${spot.id}.jpg',
                             height: 300,
-                            'assets/images/gilles.jpg',
                             fit: BoxFit.cover,
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+                              return Image.asset(
+                                'assets/images/default.jpg',
+                                height: 300,
+                                fit: BoxFit.cover,
+                              );
+                            },
                           ),
                         ),
                       ),

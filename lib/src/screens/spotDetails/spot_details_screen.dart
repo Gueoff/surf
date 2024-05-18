@@ -11,13 +11,13 @@ import 'package:surf/src/models/surf.dart';
 import 'package:surf/src/models/swell.dart';
 import 'package:surf/src/models/weather.dart';
 import 'package:surf/src/models/wind.dart';
-import 'package:surf/src/screens/spotDetails/detail_silver.dart';
-import 'package:surf/src/screens/spotDetails/tide_chart.dart';
-import 'package:surf/src/screens/spotDetails/timeline_card.dart';
-import 'package:surf/src/screens/spotDetails/water_temperature_card.dart';
-import 'package:surf/src/screens/spotDetails/wave_card.dart';
-import 'package:surf/src/screens/spotDetails/wind_card.dart';
-import 'package:surf/src/screens/spotDetails/weather_card.dart';
+import 'package:surf/src/screens/spotDetails/components/detail_silver.dart';
+import 'package:surf/src/screens/spotDetails/components/tide_chart.dart';
+import 'package:surf/src/screens/spotDetails/components/timeline_card.dart';
+import 'package:surf/src/screens/spotDetails/components/water_temperature_card.dart';
+import 'package:surf/src/screens/spotDetails/components/wave_card.dart';
+import 'package:surf/src/screens/spotDetails/components/wind_card.dart';
+import 'package:surf/src/screens/spotDetails/components/weather_card.dart';
 import 'package:surf/src/services/api_service.dart';
 import 'package:intl/intl.dart';
 
@@ -382,7 +382,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                   opacity: 0.5,
                                   child: Container(
                                     width: 1,
-                                    height: 300,
+                                    height: 230,
                                     color: Colors.red,
                                   ),
                                 ),

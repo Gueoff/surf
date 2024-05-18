@@ -61,8 +61,7 @@ class SwellEntity {
 
     return SwellEntity(
       swells: swells,
-      power: json['power']?.toDouble() ??
-          0.0, // Assurez-vous de gérer les valeurs null
+      power: json['power']?.toDouble() ?? 0.0,
       timestamp: json['timestamp'],
       utcOffset: json['utcOffset'],
     );

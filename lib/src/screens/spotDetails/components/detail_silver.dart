@@ -32,11 +32,19 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
               end: Alignment.center,
             ).createShader(bounds),
             blendMode: BlendMode.darken,
-            child: Image.asset(
-              'assets/images/gilles.jpg',
+            child: Image.network(
+              'https://surf.leaff.me/image/${spot.id}.jpg',
               width: MediaQuery.of(context).size.width,
               height: expandedHeight,
               fit: BoxFit.cover,
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
+                return Image.asset(
+                  'assets/images/default.jpg',
+                  height: 300,
+                  fit: BoxFit.cover,
+                );
+              },
             ),
           ),
         ),

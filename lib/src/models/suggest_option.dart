@@ -47,6 +47,10 @@ class SuggestOption {
       contexts: Map<String, dynamic>.from(json['contexts']),
     );
   }
+
+  String toString() {
+    return 'SuggestOption($text $id)';
+  }
 }
 
 class Suggest {
