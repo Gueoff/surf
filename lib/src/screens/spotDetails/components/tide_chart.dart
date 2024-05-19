@@ -7,8 +7,13 @@ import 'package:surf/src/screens/spotDetails/spot_details_screen.dart';
 class TideChart extends StatefulWidget {
   final ScrollController animation;
   final List<Tide> tides;
+  final int intervalHours;
 
-  const TideChart({super.key, required this.animation, required this.tides});
+  const TideChart(
+      {super.key,
+      required this.animation,
+      required this.tides,
+      required this.intervalHours});
 
   @override
   State<TideChart> createState() => _TideChartState();
@@ -24,7 +29,7 @@ class _TideChartState extends State<TideChart> {
           builder: (context, child) {
             return CustomPaint(
               painter: SinePainter(widget.animation.offset, widget.tides,
-                  Theme.of(context).colorScheme.tertiary),
+                  Theme.of(context).colorScheme.tertiary, widget.intervalHours),
               child: Container(),
             );
           }),
@@ -38,8 +43,9 @@ class SinePainter extends CustomPainter {
   final Color color;
   final timeFormatter = DateFormat.Hm();
   int screenWidth = 411;
+  int intervalHours;
 
-  SinePainter(this.offset, this.tides, this.color);
+  SinePainter(this.offset, this.tides, this.color, this.intervalHours);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -82,8 +88,10 @@ class SinePainter extends CustomPainter {
       double cardWidth = timelineCardWidth + separatorWidth;
       double screenOffset = screenWidth / 2;
 
-      double x =
-          screenOffset + (dateOffset * cardWidth / 180) - offset - wordingWidth;
+      double x = screenOffset +
+          (dateOffset * cardWidth / (intervalHours * 60)) -
+          offset -
+          wordingWidth;
       double y = currentTide.type == 'LOW' ? size.height - 20 : 20;
       // Draw paragraph times.
       canvas.drawParagraph(
@@ -93,7 +101,7 @@ class SinePainter extends CustomPainter {
 
       // Stocker la position du paragraphe
       paragraphPositions.add(
-        Offset(x + 10, currentTide.type == 'LOW' ? size.height : 0),
+        Offset(x + 15, currentTide.type == 'LOW' ? size.height : 0),
       );
     }
 

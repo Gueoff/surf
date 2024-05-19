@@ -24,10 +24,10 @@ class TimelineCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       shadowColor: const Color.fromRGBO(97, 216, 240, 0.2),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Pressable(
-        borderRadius: const BorderRadius.all(Radius.circular(15)),
+        borderRadius: const BorderRadius.all(Radius.circular(14)),
         onTap: () {
           onCardTap(forecast);
         },
@@ -43,8 +43,8 @@ class TimelineCard extends StatelessWidget {
                   ),
                 ),
                 borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15)),
+                    topLeft: Radius.circular(14),
+                    topRight: Radius.circular(14)),
               ),
               child: Padding(
                 padding:

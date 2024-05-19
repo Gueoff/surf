@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:surf/src/components/favorite_spot_list.dart';
 import 'package:surf/src/components/header.dart';
-import 'package:surf/src/components/pressable.dart';
 import 'package:surf/src/models/spot.dart';
 import 'package:surf/src/models/suggest_option.dart';
 import 'package:surf/src/redux/app_state.dart';

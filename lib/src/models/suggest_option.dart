@@ -48,6 +48,7 @@ class SuggestOption {
     );
   }
 
+  @override
   String toString() {
     return 'SuggestOption($text $id)';
   }

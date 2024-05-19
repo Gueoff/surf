@@ -55,7 +55,7 @@ class _FavoriteButtonState extends State<FavoriteButton>
               ClipRRect(
                 borderRadius: BorderRadius.circular(14),
                 child: BackdropFilter(
-                  filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  filter: ui.ImageFilter.blur(sigmaX: 2, sigmaY: 2),
                   child: Container(
                     width: 36,
                     height: 36,

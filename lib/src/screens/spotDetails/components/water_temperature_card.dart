@@ -35,7 +35,7 @@ class WaterTemperatureCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       shadowColor: const Color.fromRGBO(97, 216, 240, 0.2),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Container(
         decoration: const BoxDecoration(
