@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:surf/src/components/button_blur.dart';
 import 'package:surf/src/components/favorite_button.dart';
 import 'package:surf/src/models/spot.dart';
 
@@ -49,36 +50,21 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
           ),
         ),
         Positioned(
-          child: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: Container(
-              margin: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top,
-                left: 24,
-                right: 24,
-              ),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(208, 217, 222, 0.6),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: const Icon(
-                Icons.arrow_back_ios_outlined,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-          ),
-        ),
+            left: 24,
+            top: MediaQuery.of(context).padding.top + 12,
+            child: ButtonBlur(
+                icon: Icons.arrow_back_ios_outlined,
+                onTap: () => Navigator.of(context).pop())),
         Positioned(
-          right: 0,
+          right: 24,
+          top: MediaQuery.of(context).padding.top + 12,
           child: FavoriteButton(spot: spot),
         ),
         Positioned(
             left: 24,
             bottom: 32 + 40,
             child: Text(spot.name,
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                     color: Theme.of(context)
                         .colorScheme
                         .primary

@@ -39,3 +39,30 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/weather/
+
+  fonts:
+    - family: NoyhR-Medium
+      fonts:
+        - asset: fonts/NoyhR-Medium.ttf
+        - asset: fonts/NoyhR-MediumItalic.ttf
+          style: italic
+    - family: NoyhR-Regular
+      fonts:
+        - asset: fonts/NoyhR-Regular.ttf
+        - asset: fonts/NoyhR-Italic.ttf
+          style: italic
+    - family: NoyhR-SemiLight
+      fonts:
+        - asset: fonts/NoyhR-SemiLight.ttf
+        - asset: fonts/NoyhR-SemiLightItalic.ttf
+          style: italic
+    - family: NoyhR-Light
+      fonts:
+        - asset: fonts/NoyhR-Light.ttf
+        - asset: fonts/NoyhR-LightItalic.ttf
+          style: italic
+    - family: NoyhR-ExtraLight
+      fonts:
+        - asset: fonts/NoyhR-ExtraLight.ttf
+        - asset: fonts/NoyhR-ExtraLightItalic.ttf
+          style: italic

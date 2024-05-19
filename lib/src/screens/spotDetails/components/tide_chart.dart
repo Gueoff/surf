@@ -68,7 +68,11 @@ class SinePainter extends CustomPainter {
       final ui.ParagraphStyle paragraphStyle = ui.ParagraphStyle(
         fontSize: 12,
       );
-      final ui.TextStyle textStyle = ui.TextStyle(color: color);
+      final ui.TextStyle textStyle = ui.TextStyle(
+        color: color,
+        fontFamily: 'NoyhR-Light',
+        fontSize: 14,
+      );
       final ui.ParagraphBuilder paragraphBuilder =
           ui.ParagraphBuilder(paragraphStyle)..pushStyle(textStyle);
       paragraphBuilder.addText(time);

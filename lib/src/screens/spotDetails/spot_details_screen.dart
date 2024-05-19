@@ -434,8 +434,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                             builder: (BuildContext context, Widget? child) {
                               var offsetTmp = offset / 4;
                               return SizedBox(
-                                width: 36, // Specify a width here
-                                height: 36, // Specify a height here
+                                width: 36,
+                                height: 36,
                                 child: OverflowBox(
                                   maxWidth: double.infinity,
                                   alignment: const Alignment(4, 3),

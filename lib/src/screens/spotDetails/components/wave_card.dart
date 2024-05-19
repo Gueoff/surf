@@ -92,11 +92,11 @@ class _WaveCardState extends State<WaveCard> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.surf.humanRelation,
-                          style: Theme.of(context).textTheme.labelMedium),
                       Text(
                           '${widget.surf.min.toString()} - ${widget.surf.max.toString()}m',
-                          style: Theme.of(context).textTheme.labelMedium),
+                          style: Theme.of(context).textTheme.bodyLarge),
+                      Text(widget.surf.humanRelation,
+                          style: Theme.of(context).textTheme.bodyMedium),
                     ],
                   ),
                 ],
@@ -108,7 +108,7 @@ class _WaveCardState extends State<WaveCard> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text('${widget.swellMain!.period.toString()}s',
-                                style: Theme.of(context).textTheme.labelMedium),
+                                style: Theme.of(context).textTheme.labelLarge),
                             AnimatedRotation(
                               duration: const Duration(milliseconds: 600),
                               turns: turnsMain,
@@ -128,7 +128,7 @@ class _WaveCardState extends State<WaveCard> {
                             Text('${widget.swellSecondary!.period.toString()}s',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .labelSmall!
+                                    .labelMedium!
                                     .copyWith(
                                         color: Theme.of(context)
                                             .colorScheme

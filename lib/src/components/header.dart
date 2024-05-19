@@ -14,7 +14,7 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          left: 24, right: 24, top: MediaQuery.of(context).padding.top),
+          left: 24, right: 24, top: MediaQuery.of(context).padding.top + 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -23,13 +23,13 @@ class Header extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
               const SizedBox(height: 4),
               if (subtitle != null)
                 Text(
                   subtitle!,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 )
             ],
           ),

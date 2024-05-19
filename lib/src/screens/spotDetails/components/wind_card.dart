@@ -65,12 +65,12 @@ class _WindCardState extends State<WindCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(widget.wind.directionType.toString(),
-                          style: Theme.of(context).textTheme.labelMedium),
+                          style: Theme.of(context).textTheme.bodyLarge),
                       Text('${widget.wind.speed.round().toString()} km/h',
-                          style: Theme.of(context).textTheme.labelMedium),
+                          style: Theme.of(context).textTheme.bodyMedium),
                       Text(
                           'Rafales à ${widget.wind.gust.round().toString()} km/h',
-                          style: Theme.of(context).textTheme.labelSmall),
+                          style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),
                 ],

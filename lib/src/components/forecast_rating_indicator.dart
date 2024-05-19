@@ -33,7 +33,7 @@ class ForecastRatingIndicator extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: getColor(),
-        borderRadius: BorderRadius.circular(3), // Définissez votre rayon ici
+        borderRadius: BorderRadius.circular(3),
       ),
     );
   }

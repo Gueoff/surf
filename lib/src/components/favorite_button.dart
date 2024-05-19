@@ -1,7 +1,7 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:surf/src/models/spot.dart';
-
 import 'package:surf/src/redux/app_state.dart';
 import 'package:surf/src/redux/spot/spot_actions.dart';
 import 'package:surf/src/redux/spot/spot_view_model.dart';
@@ -42,35 +42,45 @@ class _FavoriteButtonState extends State<FavoriteButton>
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, SpotViewModel>(
-        converter: (store) => SpotViewModel.fromStore(store),
-        builder: (context, viewModel) {
-          bool isFavorite = viewModel.spots
-              .any((spotFavorite) => spotFavorite.id == widget.spot.id);
+      converter: (store) => SpotViewModel.fromStore(store),
+      builder: (context, viewModel) {
+        bool isFavorite = viewModel.spots
+            .any((spotFavorite) => spotFavorite.id == widget.spot.id);
 
-          return GestureDetector(
-            onTap: isFavorite ? onRemoveToFavorites : onAddToFavorites,
-            child: Container(
-              margin: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top,
-                left: 24,
-                right: 24,
-              ),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(208, 217, 222, 0.6),
+        return GestureDetector(
+          onTap: isFavorite ? onRemoveToFavorites : onAddToFavorites,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              ClipRRect(
                 borderRadius: BorderRadius.circular(14),
+                child: BackdropFilter(
+                  filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: const Color.fromRGBO(255, 255, 255, 0.2),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                ),
               ),
-              child: ScaleTransition(
-                scale: Tween(begin: 0.7, end: 1.0).animate(CurvedAnimation(
+              ScaleTransition(
+                scale: Tween(begin: 0.8, end: 1.0).animate(CurvedAnimation(
                     parent: _controller, curve: Curves.easeOut)),
                 child: Icon(
-                  Icons.star,
-                  color: isFavorite ? Colors.yellow : Colors.white,
+                  isFavorite
+                      ? Icons.bookmark_outlined
+                      : Icons.bookmark_outline_outlined,
+                  color: Colors.white,
                   size: 20,
                 ),
               ),
-            ),
-          );
-        });
+            ],
+          ),
+        );
+      },
+    );
   }
 }
