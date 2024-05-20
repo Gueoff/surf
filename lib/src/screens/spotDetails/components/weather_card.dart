@@ -24,21 +24,16 @@ class WeatherCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: WeatherIcon(condition: weather.condition),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: WeatherIcon(condition: weather.condition),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${weather.temperature.round().toString()}°C',
-                          style: Theme.of(context).textTheme.bodyLarge),
-                    ],
-                  ),
+                  Text('${weather.temperature.round().toString()}°C',
+                      style: Theme.of(context).textTheme.bodyLarge),
                 ],
               ),
             ],

@@ -1,11 +1,12 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:surf/src/components/button_toggle.dart';
 import 'package:surf/src/components/forecast_rating_indicator.dart';
 import 'package:surf/src/models/spot.dart';
 import 'package:surf/src/models/forecast.dart';
 import 'package:surf/src/models/rating.dart';
+import 'package:surf/src/models/spot_weather_response.dart';
+import 'package:surf/src/models/sunlight.dart';
 import 'package:surf/src/models/tide.dart';
 import 'package:surf/src/models/water_temperature.dart';
 import 'package:surf/src/models/surf.dart';
@@ -13,6 +14,7 @@ import 'package:surf/src/models/swell.dart';
 import 'package:surf/src/models/weather.dart';
 import 'package:surf/src/models/wind.dart';
 import 'package:surf/src/screens/spotDetails/components/detail_silver.dart';
+import 'package:surf/src/screens/spotDetails/components/sunlight_card.dart';
 import 'package:surf/src/screens/spotDetails/components/tide_chart.dart';
 import 'package:surf/src/screens/spotDetails/components/timeline_card.dart';
 import 'package:surf/src/screens/spotDetails/components/water_temperature_card.dart';
@@ -74,7 +76,7 @@ int findNearestIndex(List<Forecast> forecastData, double timestamp) {
     } else if (midDate > timestamp) {
       maxIndex = midIndex - 1;
     } else {
-      return midIndex; // Date exacte trouvée.
+      return midIndex;
     }
   }
 
@@ -85,6 +87,21 @@ int findNearestIndex(List<Forecast> forecastData, double timestamp) {
   var beforeDifference = timestamp - beforeDate;
   var afterDifference = afterDate - timestamp;
   return (beforeDifference <= afterDifference) ? maxIndex : minIndex;
+}
+
+Sunlight getSunlight(List<Sunlight> sunlights, Forecast forecast) {
+  DateTime originalDateTime =
+      DateTime.fromMillisecondsSinceEpoch(forecast.timestamp * 1000);
+
+  DateTime dateStart = DateTime(originalDateTime.year, originalDateTime.month,
+      originalDateTime.day, 0, 0, 0);
+  DateTime dateEnd = DateTime(originalDateTime.year, originalDateTime.month,
+      originalDateTime.day, 23, 59, 59);
+
+  return sunlights.firstWhere((element) {
+    DateTime dawn = DateTime.fromMillisecondsSinceEpoch(element.dawn * 1000);
+    return dawn.isAfter(dateStart) && dawn.isBefore(dateEnd);
+  });
 }
 
 double timelineCardWidth = 68;
@@ -111,6 +128,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   DateTime currentDate = DateTime.now();
   late WaterTemperature waterTemperature;
   late List<Tide> tides;
+  late List<Sunlight> sunlights;
   double screenWidth = 0.0;
   int intervalHours = 3;
 
@@ -128,7 +146,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     late List<Surf> responseSurf;
     late List<Swell> responseSwell;
     late List<Tide> responseTide;
-    late List<Weather> responseWeather;
+    late SpotWeatherResponse responseWeather;
     late List<Wind> responseWind;
     late WaterTemperature responseWaterTemperature;
 
@@ -146,11 +164,12 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
       ]);
 
       forecastData = groupEntitiesByTimestamp(responseRating, responseSurf,
-          responseSwell, responseTide, responseWeather, responseWind);
+          responseSwell, responseTide, responseWeather.weather, responseWind);
 
       setState(() {
-        waterTemperature = responseWaterTemperature;
+        sunlights = responseWeather.sunlight;
         tides = responseTide.where((tide) => tide.type != 'NORMAL').toList();
+        waterTemperature = responseWaterTemperature;
       });
 
       _scrollToCurrentDate();
@@ -206,13 +225,14 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   // Change the interval hours.
   onSetInterval(int value) {
-    print(value);
-    apiService.setIntervalHours(value);
-    future = onGetSpotForecasts(widget.spot.id);
+    if (value != intervalHours) {
+      apiService.setIntervalHours(value);
+      future = onGetSpotForecasts(widget.spot.id);
 
-    setState(() {
-      intervalHours = value;
-    });
+      setState(() {
+        intervalHours = value;
+      });
+    }
   }
 
   // Scroll to the current time.
@@ -377,6 +397,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                                                       .value),
                                                         ),
                                                         TimelineCard(
+                                                            intervalHours:
+                                                                intervalHours,
                                                             forecast: forecast,
                                                             onCardTap:
                                                                 onPressForecast),
@@ -460,33 +482,16 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                         swell: selectedForecast!.swell,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              AnimatedBuilder(
-                                animation: _scrollController,
-                                builder: (BuildContext context, Widget? child) {
-                                  var offsetTmp = offset / 4;
-                                  return SizedBox(
-                                    width: 36,
-                                    height: 36,
-                                    child: OverflowBox(
-                                      maxWidth: double.infinity,
-                                      alignment: const Alignment(4, 3),
-                                      child: Transform.translate(
-                                        offset: Offset(0,
-                                            offsetTmp <= 20 ? -offsetTmp : -20),
-
-                                        // angle: ((math.pi * offset) / -1024),
-                                        child: SvgPicture.asset(
-                                            'assets/icons/weather/clear-day.svg',
-                                            width: 36,
-                                            height: 36,
-                                            semanticsLabel: 'Meteo'),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 24, right: 24, bottom: 12),
+                                      child: SunlightCard(
+                                        sunlight: getSunlight(
+                                            sunlights, selectedForecast!),
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
+                                  ],
+                                ),
                             ],
                           );
                   },

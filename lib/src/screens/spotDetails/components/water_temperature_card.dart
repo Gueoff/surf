@@ -62,7 +62,7 @@ class WaterTemperatureCard extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyLarge),
                       Text(
                         getWetsuit(),
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodySmall,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         softWrap: false,

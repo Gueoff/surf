@@ -7,13 +7,21 @@ import 'package:intl/intl.dart';
 class TimelineCard extends StatelessWidget {
   final Forecast forecast;
   final Function(Forecast) onCardTap;
+  final int intervalHours;
   final timeFormatter = DateFormat.Hm();
   late final DateTime dateTime;
   late final bool isPast;
 
-  TimelineCard({super.key, required this.forecast, required this.onCardTap}) {
+  TimelineCard(
+      {super.key,
+      required this.forecast,
+      required this.onCardTap,
+      required this.intervalHours}) {
     dateTime = DateTime.fromMillisecondsSinceEpoch(forecast.timestamp * 1000);
-    isPast = DateTime.now().difference(dateTime).inHours > 0;
+
+    DateTime now = DateTime.now();
+    DateTime previousTime = now.subtract(Duration(hours: intervalHours - 1));
+    isPast = previousTime.difference(dateTime).inHours > 0;
   }
 
   @override

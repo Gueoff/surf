@@ -118,7 +118,7 @@ class _WaveCardState extends State<WaveCard> {
                       Text(
                           getLocalizedString(
                               widget.surf.humanRelation, context),
-                          style: Theme.of(context).textTheme.bodyMedium),
+                          style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),
                 ],

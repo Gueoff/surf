@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:surf/src/entities/rating_entity.dart';
 import 'package:surf/src/entities/suggest_option_entity.dart';
+import 'package:surf/src/entities/sunlight_entity.dart';
 import 'package:surf/src/entities/surf_entity.dart';
 import 'package:surf/src/entities/swell_entity.dart';
 import 'package:surf/src/entities/tide_entity.dart';
@@ -9,7 +10,9 @@ import 'package:surf/src/entities/wave_entity.dart';
 import 'package:surf/src/entities/weather_entity.dart';
 import 'package:surf/src/models/rating.dart';
 import 'package:surf/src/entities/wind_entity.dart';
+import 'package:surf/src/models/spot_weather_response.dart';
 import 'package:surf/src/models/suggest_option.dart';
+import 'package:surf/src/models/sunlight.dart';
 import 'package:surf/src/models/surf.dart';
 import 'package:surf/src/models/swell.dart';
 import 'package:surf/src/models/tide.dart';
@@ -224,9 +227,11 @@ class ApiService {
     }
   }
 
-  Future<List<Weather>> getSpotWeather(String spotId) async {
+  Future<SpotWeatherResponse> getSpotWeather(String spotId) async {
     final response = await http.get(Uri.parse(
         '$endpoint/kbyg/spots/forecasts/weather?spotId=$spotId&days=$_days&intervalHours=$_intervalHours&units[temperature]=${_unitTemperature.name}&cacheEnabled=true'));
+    late List<Weather> weathers;
+    late List<Sunlight> sunlights;
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
@@ -237,13 +242,21 @@ class ApiService {
             .map((entityJson) => WeatherEntity.fromJson(entityJson))
             .toList();
 
-        List<Weather> weathers =
-            weatherEntities.map((entity) => entity.toWeather()).toList();
-
-        return weathers;
+        weathers = weatherEntities.map((entity) => entity.toWeather()).toList();
       }
 
-      return [];
+      if (body['data']['sunlightTimes'] is List &&
+          body['data']['sunlightTimes'].isNotEmpty) {
+        List<SunlightEntity> sunlightEntities =
+            (body['data']['sunlightTimes'] as List)
+                .map((entityJson) => SunlightEntity.fromJson(entityJson))
+                .toList();
+
+        sunlights =
+            sunlightEntities.map((entity) => entity.toSunlight()).toList();
+      }
+
+      return SpotWeatherResponse(sunlight: sunlights, weather: weathers);
     } else {
       throw Exception('Failed to load weather');
     }
