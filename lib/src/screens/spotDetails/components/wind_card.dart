@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:surf/src/models/wind.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 double _calculateDifference(double previousDirection, double newDirection) {
   return (newDirection - previousDirection) / 360;
@@ -69,7 +70,8 @@ class _WindCardState extends State<WindCard> {
                       Text('${widget.wind.speed.round().toString()} km/h',
                           style: Theme.of(context).textTheme.bodyMedium),
                       Text(
-                          'Rafales à ${widget.wind.gust.round().toString()} km/h',
+                          AppLocalizations.of(context)!.gusts(
+                              '${widget.wind.gust.round().toString()} km/h'),
                           style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),

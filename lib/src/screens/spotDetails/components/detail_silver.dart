@@ -42,7 +42,8 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
                   StackTrace? stackTrace) {
                 return Image.asset(
                   'assets/images/default.jpg',
-                  height: 300,
+                  width: MediaQuery.of(context).size.width,
+                  height: expandedHeight,
                   fit: BoxFit.cover,
                 );
               },

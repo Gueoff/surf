@@ -11,6 +11,7 @@ import 'package:surf/src/services/api_service.dart';
 import 'package:surf/src/components/text_input.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -58,9 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Header(
-              title: 'Welcome man',
-              subtitle: 'Trouve ton spot',
+            Header(
+              title: AppLocalizations.of(context)!.title,
+              subtitle: AppLocalizations.of(context)!.subtitle,
             ),
             TypeAheadField<SuggestOption>(
               builder: (context, controller, focusNode) {
@@ -69,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Textinput(
                     controller: controller,
                     focusNode: focusNode,
-                    hintText: 'Spot de surf',
+                    hintText: AppLocalizations.of(context)!.spots,
                     keyboardType: TextInputType.text,
                     prefixIcon: Icon(Icons.search,
                         size: 24,
@@ -105,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
               emptyBuilder: (context) => Center(
-                child: Text('Pas de résultat',
+                child: Text(AppLocalizations.of(context)!.noResult,
                     style: Theme.of(context).textTheme.bodyLarge),
               ),
               loadingBuilder: (context) => Center(
@@ -133,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Text('Mes spots favoris',
+                        child: Text(AppLocalizations.of(context)!.favorites,
                             style: Theme.of(context).textTheme.headlineSmall),
                       ),
                       FavoriteSpotList(spots: viewModel.spots),

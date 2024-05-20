@@ -1,0 +1,14 @@
+{
+    "title": "Salut man",
+    "subtitle": "Trouve ton spot",
+    "kneeToThigh": "Genou/cuisse",
+    "shinToKnee" : "Tibia/genou",
+    "thighToWaist": "Cuisse/taille",
+    "waistToShoulder": "Taille/épaules",
+    "waistToHead": "Taille/tête",
+    "thighToStomach": "Cuisse/ventre",
+    "favorites": "Mes spots favoris",
+    "noResult": "Pas de résultat",
+    "spots": "Spot de surf",
+    "gusts": "Rafales à {value}"
+}

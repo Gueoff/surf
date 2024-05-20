@@ -1,11 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:surf/src/models/surf.dart';
 import 'package:surf/src/models/swell.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 double _calculateDifference([double? previousDirection, double? newDirection]) {
   double prev = previousDirection ?? 0.0;
   double newDir = newDirection ?? 0.0;
   return (newDir - prev) / 360;
+}
+
+String getLocalizedString(String key, BuildContext context) {
+  switch (key) {
+    case "Knee to thigh":
+      return AppLocalizations.of(context)!.kneeToThigh;
+    case "Shin to knee":
+      return AppLocalizations.of(context)!.shinToKnee;
+    case "Thigh to waist":
+      return AppLocalizations.of(context)!.thighToWaist;
+    case "Waist to shoulder":
+      return AppLocalizations.of(context)!.waistToShoulder;
+    case "Waist to head":
+      return AppLocalizations.of(context)!.waistToHead;
+    case "Thigh to stomach":
+      return AppLocalizations.of(context)!.thighToStomach;
+    default:
+      return key;
+  }
 }
 
 class WaveCard extends StatefulWidget {
@@ -95,7 +115,9 @@ class _WaveCardState extends State<WaveCard> {
                       Text(
                           '${widget.surf.min.toString()} - ${widget.surf.max.toString()}m',
                           style: Theme.of(context).textTheme.bodyLarge),
-                      Text(widget.surf.humanRelation,
+                      Text(
+                          getLocalizedString(
+                              widget.surf.humanRelation, context),
                           style: Theme.of(context).textTheme.bodyMedium),
                     ],
                   ),

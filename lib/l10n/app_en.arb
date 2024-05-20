@@ -1,0 +1,14 @@
+{
+    "title": "Hey man",
+    "subtitle": "Find your spot",
+    "kneeToThigh": "Knee to tight",
+    "shinToKnee" : "Shin to knee",
+    "thighToWaist": "Thigh to waist",
+    "waistToShoulder": "Waist to shoulder",
+    "waistToHead": "Waist to head",
+    "thighToStomach": "Thigh to stomach",
+    "favorites": "My favorites spots",
+    "noResult": "No result",
+    "spots": "Surf spots",
+    "gusts": "Gusts at {value}"
+}
