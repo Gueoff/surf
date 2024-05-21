@@ -137,7 +137,10 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(onScroll);
-    future = onGetSpotForecasts(widget.spot.id);
+    future = onGetSpotForecasts(widget.spot.id).then((_) {
+      _scrollToDate(DateTime.now());
+      return _;
+    });
   }
 
   // Get the spot forecast.
@@ -172,7 +175,6 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
         waterTemperature = responseWaterTemperature;
       });
 
-      _scrollToCurrentDate();
       return forecastData;
     } catch (error) {
       log(error.toString());
@@ -209,7 +211,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   }
 
   // Get the current time in the timeline.
-  getCurrentTime() {
+  DateTime getCurrentTime() {
     double hours = (offset + separatorWidth / 2) /
         (timelineCardWidth + separatorWidth) *
         intervalHours;
@@ -220,14 +222,19 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     DateTime exactTime =
         startTime.add(Duration(hours: roundedHour, minutes: 0));
 
-    return timeFormatter.format(exactTime);
+    return exactTime;
   }
 
   // Change the interval hours.
   onSetInterval(int value) {
     if (value != intervalHours) {
+      DateTime current = getCurrentTime();
       apiService.setIntervalHours(value);
-      future = onGetSpotForecasts(widget.spot.id);
+
+      future = onGetSpotForecasts(widget.spot.id).then((_) {
+        _scrollToDate(current);
+        return _;
+      });
 
       setState(() {
         intervalHours = value;
@@ -236,11 +243,10 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   }
 
   // Scroll to the current time.
-  void _scrollToCurrentDate() {
+  void _scrollToDate(DateTime date) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var currentDate = DateTime.now().millisecondsSinceEpoch / 1000;
-
-      var index = findNearestIndex(forecastData, currentDate);
+      var index =
+          findNearestIndex(forecastData, date.millisecondsSinceEpoch / 1000);
       _scrollTo(index);
     });
   }
@@ -318,7 +324,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                       flex: 1,
                                       child: selectedForecast != null
                                           ? Text(
-                                              getCurrentTime(),
+                                              timeFormatter
+                                                  .format(getCurrentTime()),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .titleMedium,
@@ -344,7 +351,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                             ),
                                           ),
                                           onPressed: () {
-                                            _scrollToCurrentDate();
+                                            _scrollToDate(DateTime.now());
                                           },
                                           child: Icon(
                                             Icons.schedule,
@@ -484,7 +491,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 24, right: 24, bottom: 12),
+                                          left: 24, right: 24, bottom: 32),
                                       child: SunlightCard(
                                         sunlight: getSunlight(
                                             sunlights, selectedForecast!),

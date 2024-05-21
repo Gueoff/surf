@@ -38,6 +38,9 @@ class WaterTemperatureCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
       ),
       child: Container(
+        constraints: const BoxConstraints(
+          minHeight: 80,
+        ),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(24)),
         ),

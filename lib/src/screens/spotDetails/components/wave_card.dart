@@ -19,6 +19,8 @@ String getLocalizedString(String key, BuildContext context) {
       return AppLocalizations.of(context)!.thighToWaist;
     case "Waist to shoulder":
       return AppLocalizations.of(context)!.waistToShoulder;
+    case "Waist to chest":
+      return AppLocalizations.of(context)!.waistToChest;
     case "Waist to head":
       return AppLocalizations.of(context)!.waistToHead;
     case "Thigh to stomach":
@@ -91,6 +93,9 @@ class _WaveCardState extends State<WaveCard> {
         borderRadius: BorderRadius.circular(14),
       ),
       child: Container(
+        constraints: const BoxConstraints(
+          minHeight: 100,
+        ),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(24)),
         ),

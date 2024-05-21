@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:surf/src/components/weather_icon.dart';
 import 'package:surf/src/models/sunlight.dart';
-import 'package:surf/src/models/weather.dart';
 
 class SunlightCard extends StatelessWidget {
   final Sunlight sunlight;
@@ -23,6 +21,9 @@ class SunlightCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
       ),
       child: Container(
+        constraints: const BoxConstraints(
+          minHeight: 80,
+        ),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(24)),
         ),
