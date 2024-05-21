@@ -30,6 +30,7 @@ class WeatherIcon extends StatelessWidget {
       case 'SHOWERS':
         return 'assets/icons/weather/rain.svg';
       case 'HEAVY_THUNDER_STORMS':
+      case 'THUNDER_STORMS':
         return 'assets/icons/weather/lightning-bolt.svg';
       case 'THUNDER_SHOWERS':
         return 'assets/icons/weather/thunderstorms-rain.svg';
@@ -55,6 +56,8 @@ class WeatherIcon extends StatelessWidget {
       case 'NIGHT_THUNDER_STORMS':
       case 'NIGHT_HEAVY_THUNDER_STORMS':
         return 'assets/icons/weather/thunderstorms-night.svg';
+      case 'NIGHT_THUNDER_SHOWERS':
+        return 'assets/icons/weather/thunderstorms-night-rain.svg';
       case 'NIGHT_FOG':
         return 'assets/icons/weather/partly-cloudy-night-fog.svg';
       default:
