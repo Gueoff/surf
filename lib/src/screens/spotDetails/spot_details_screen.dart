@@ -89,19 +89,23 @@ int findNearestIndex(List<Forecast> forecastData, double timestamp) {
   return (beforeDifference <= afterDifference) ? maxIndex : minIndex;
 }
 
-Sunlight getSunlight(List<Sunlight> sunlights, Forecast forecast) {
+Sunlight? getSunlight(List<Sunlight> sunlights, Forecast forecast) {
   DateTime originalDateTime =
       DateTime.fromMillisecondsSinceEpoch(forecast.timestamp * 1000);
 
-  DateTime dateStart = DateTime(originalDateTime.year, originalDateTime.month,
-      originalDateTime.day, 0, 0, 0);
-  DateTime dateEnd = DateTime(originalDateTime.year, originalDateTime.month,
-      originalDateTime.day, 23, 59, 59);
+  try {
+    return sunlights.firstWhere((element) {
+      DateTime dawn = DateTime.fromMillisecondsSinceEpoch(element.dawn * 1000);
+      DateTime dusk = DateTime.fromMillisecondsSinceEpoch(element.dusk * 1000);
 
-  return sunlights.firstWhere((element) {
-    DateTime dawn = DateTime.fromMillisecondsSinceEpoch(element.dawn * 1000);
-    return dawn.isAfter(dateStart) && dawn.isBefore(dateEnd);
-  });
+      return dawn.day == originalDateTime.day ||
+          dusk.day == originalDateTime.day;
+    });
+  } catch (e) {
+    log(e.toString());
+  }
+
+  return null;
 }
 
 double timelineCardWidth = 68;
@@ -494,7 +498,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                           left: 24, right: 24, bottom: 32),
                                       child: SunlightCard(
                                         sunlight: getSunlight(
-                                            sunlights, selectedForecast!),
+                                            sunlights, selectedForecast!)!,
                                       ),
                                     ),
                                   ],
