@@ -21,11 +21,11 @@ class WindEntity {
 
   factory WindEntity.fromJson(Map<String, dynamic> json) {
     return WindEntity(
-      direction: json['direction'],
+      direction: json['direction'].toDouble(),
       directionType: json['directionType'],
-      gust: json['gust'],
+      gust: json['gust'].toDouble(),
       optimalScore: json['optimalScore'],
-      speed: json['speed'],
+      speed: json['speed'].toDouble(),
       timestamp: json['timestamp'],
       utcOffset: json['utcOffset'],
     );

@@ -20,7 +20,7 @@ class ButtonsToggle extends StatelessWidget {
         onTap(options[index]);
       },
       borderRadius: const BorderRadius.all(Radius.circular(14)),
-      borderColor: Theme.of(context).colorScheme.onPrimary,
+      borderColor: Theme.of(context).colorScheme.surface,
       selectedBorderColor: Theme.of(context).colorScheme.secondary,
       selectedColor: Theme.of(context).colorScheme.primary,
       fillColor: Theme.of(context).colorScheme.secondary,

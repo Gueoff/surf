@@ -27,10 +27,10 @@ class TimelineCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: isPast ? const Color.fromRGBO(208, 217, 222, 0.6) : Colors.white,
+      color: isPast ? Theme.of(context).colorScheme.surface : Colors.white,
       elevation: 8,
       margin: EdgeInsets.zero,
-      shadowColor: const Color.fromRGBO(97, 216, 240, 0.2),
+      shadowColor: const Color.fromRGBO(12, 68, 93, 0.2),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
       ),
