@@ -36,7 +36,7 @@ import 'dart:convert';
 // https://services.surfline.com/kbyg/events/taxonomy?id=584204204e65fad6a770901d&type=spot
 // https://services.surfline.com/kbyg/regions/forecasts/conditions?subregionId=58581a836630e24c448790a7&days=5
 class ApiService {
-  String endpoint = 'https://services.surfline.com';
+  String endpoint = 'https://surf.leaff.me/api';
   int _days = 5;
   int _intervalHours = 3;
   Height _unitHeight = Height.M;
@@ -67,7 +67,7 @@ class ApiService {
 
   Future<List<SuggestOption>> searchSpot(String spotId) async {
     final response = await http.get(Uri.parse(
-        '$endpoint/search/site?q=$spotId&querySize=6&suggestionSize=6&newsSearch=true'));
+        'https://services.surfline.com/search/site?q=$spotId&querySize=6&suggestionSize=6&newsSearch=true'));
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
       if (body is List && body.isNotEmpty) {
@@ -90,7 +90,7 @@ class ApiService {
 
   Future<WaterTemperature> getSpotWaterTemperature(String spotId) async {
     final response = await http.get(Uri.parse(
-        '$endpoint/kbyg/spots/batch?spotIds=$spotId&units[waveHeight]=${_unitHeight.name}&units[swellHeight]=${_unitHeight.name}&units[tideHeight]=${_unitHeight.name}&units[temperature]=${_unitTemperature.name}&units[windSpeed]=${_unitWindSpeed.name}&cacheEnabled=true'));
+        '$endpoint/forecast/surf/$spotId?units[waveHeight]=${_unitHeight.name}&units[swellHeight]=${_unitHeight.name}&units[tideHeight]=${_unitHeight.name}&units[temperature]=${_unitTemperature.name}&units[windSpeed]=${_unitWindSpeed.name}&cacheEnabled=true'));
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
@@ -109,7 +109,7 @@ class ApiService {
 
   Future<List<Rating>> getSpotRating(String spotId) async {
     final response = await http.get(Uri.parse(
-        '$endpoint/kbyg/spots/forecasts/rating?spotId=$spotId&days=$_days&intervalHours=$_intervalHours&cacheEnabled=true'));
+        '$endpoint/forecast/rating/$spotId?days=$_days&intervalHours=$_intervalHours&cacheEnabled=true'));
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
@@ -133,7 +133,7 @@ class ApiService {
 
   Future<List<Surf>> getSpotSurf(String spotId) async {
     final response = await http.get(Uri.parse(
-        '$endpoint/kbyg/spots/forecasts/surf?spotId=$spotId&days=$_days&intervalHours=$_intervalHours&units[waveHeight]=${_unitHeight.name}&cacheEnabled=true'));
+        '$endpoint/forecast/surf/$spotId?days=$_days&intervalHours=$_intervalHours&units[waveHeight]=${_unitHeight.name}&cacheEnabled=true'));
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
@@ -157,7 +157,7 @@ class ApiService {
 
   Future<List<Swell>> getSpotSwells(String spotId) async {
     final response = await http.get(Uri.parse(
-        '$endpoint/kbyg/spots/forecasts/swells?spotId=$spotId&days=$_days&intervalHours=$_intervalHours&units[swellHeight]=${_unitHeight.name}&cacheEnabled=true'));
+        '$endpoint/forecast/swell/$spotId?days=$_days&intervalHours=$_intervalHours&units[swellHeight]=${_unitHeight.name}&cacheEnabled=true'));
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
@@ -181,7 +181,7 @@ class ApiService {
 
   Future<List<Tide>> getSpotTides(String spotId) async {
     final response = await http.get(Uri.parse(
-        '$endpoint/kbyg/spots/forecasts/tides?spotId=$spotId&days=$_days&intervalHours=$_intervalHours&units[tideHeight]=${_unitHeight.name}&cacheEnabled=true'));
+        '$endpoint/forecast/tides/$spotId?days=$_days&intervalHours=$_intervalHours&units[tideHeight]=${_unitHeight.name}&cacheEnabled=true'));
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
@@ -205,7 +205,7 @@ class ApiService {
 
   Future<List<Wave>> getSpotWaves(String spotId) async {
     final response = await http.get(Uri.parse(
-        '$endpoint/kbyg/spots/forecasts/wave?spotId=$spotId&days=$_days&intervalHours=$_intervalHours&units[swellHeight]=${_unitHeight.name}&units[waveHeight]=${_unitHeight.name}&cacheEnabled=true'));
+        '$endpoint/forecast/wave/$spotId?days=$_days&intervalHours=$_intervalHours&units[swellHeight]=${_unitHeight.name}&units[waveHeight]=${_unitHeight.name}&cacheEnabled=true'));
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
@@ -229,7 +229,7 @@ class ApiService {
 
   Future<SpotWeatherResponse> getSpotWeather(String spotId) async {
     final response = await http.get(Uri.parse(
-        '$endpoint/kbyg/spots/forecasts/weather?spotId=$spotId&days=$_days&intervalHours=$_intervalHours&units[temperature]=${_unitTemperature.name}&cacheEnabled=true'));
+        '$endpoint/forecast/weather/$spotId?days=$_days&intervalHours=$_intervalHours&units[temperature]=${_unitTemperature.name}&cacheEnabled=true'));
     late List<Weather> weathers;
     late List<Sunlight> sunlights;
 
@@ -264,7 +264,7 @@ class ApiService {
 
   Future<List<Wind>> getSpotWind(String spotId) async {
     final response = await http.get(Uri.parse(
-        '$endpoint/kbyg/spots/forecasts/wind?spotId=$spotId&days=$_days&intervalHours=$_intervalHours&units[windSpeed]=${_unitWindSpeed.name}&cacheEnabled=true'));
+        '$endpoint/forecast/wind/$spotId?days=$_days&intervalHours=$_intervalHours&units[windSpeed]=${_unitWindSpeed.name}&cacheEnabled=true'));
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
