@@ -40,7 +40,7 @@ class ForecastRating extends StatelessWidget {
               : value == 1
                   ? Icons.star_half
                   : Icons.star, // 2
-          color: Colors.yellow,
+          color: const Color.fromRGBO(252, 220, 18, 1),
           size: 20,
         ),
         Icon(
@@ -49,7 +49,7 @@ class ForecastRating extends StatelessWidget {
               : value == 3
                   ? Icons.star_half
                   : Icons.star,
-          color: Colors.yellow,
+          color: const Color.fromRGBO(252, 220, 18, 1),
           size: 20,
         ),
         Icon(
@@ -58,7 +58,7 @@ class ForecastRating extends StatelessWidget {
               : value == 5
                   ? Icons.star_half
                   : Icons.star,
-          color: Colors.yellow,
+          color: const Color.fromRGBO(252, 220, 18, 1),
           size: 20,
         ),
       ],

@@ -34,7 +34,7 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
             ).createShader(bounds),
             blendMode: BlendMode.darken,
             child: Image.network(
-              'https://surf.leaff.me/image/${spot.id}.jpg',
+              'https://surf.leaff.me/api/image/${spot.id}.jpg',
               width: MediaQuery.of(context).size.width,
               height: expandedHeight,
               fit: BoxFit.cover,

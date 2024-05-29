@@ -50,7 +50,7 @@ class FavoriteSpotList extends StatelessWidget {
                         ).createShader(bounds),
                         blendMode: BlendMode.darken,
                         child: Image.network(
-                          'https://surf.leaff.me/image/${spot.id}.jpg',
+                          'https://surf.leaff.me/api/image/${spot.id}.jpg',
                           height: 300,
                           width: 200,
                           fit: BoxFit.cover,
