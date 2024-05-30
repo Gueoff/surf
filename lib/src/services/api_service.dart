@@ -65,9 +65,9 @@ class ApiService {
     _unitWindSpeed = value;
   }
 
-  Future<List<SuggestOption>> searchSpot(String spotId) async {
+  Future<List<SuggestOption>> searchSpot(String query) async {
     final response = await http.get(Uri.parse(
-        'https://services.surfline.com/search/site?q=$spotId&querySize=6&suggestionSize=6&newsSearch=true'));
+        'https://services.surfline.com/search/site?q=$query&querySize=6&suggestionSize=6&newsSearch=true'));
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
       if (body is List && body.isNotEmpty) {
