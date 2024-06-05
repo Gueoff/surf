@@ -3,7 +3,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:surf/src/components/favorite_spot_list.dart';
 import 'package:surf/src/components/header.dart';
 import 'package:surf/src/models/spot.dart';
-import 'package:surf/src/models/suggest_option.dart';
 import 'package:surf/src/redux/app_state.dart';
 import 'package:surf/src/redux/spot/spot_view_model.dart';
 import 'package:surf/src/screens/spotDetails/spot_details_screen.dart';
@@ -21,21 +20,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  void onNavigateToSpotDetailsSreen(SuggestOption suggestOption) {
-    Spot spot = Spot(
-        id: suggestOption.id,
-        address: suggestOption.source.address,
-        location: suggestOption.source.location,
-        name: suggestOption.source.name,
-        type: suggestOption.type);
-
+  void onNavigateToSpotDetailsSreen(Spot spot) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SpotDetailsScreen(spot: spot)),
     );
   }
 
-  Future<List<SuggestOption>?> onSearch(String value) async {
+  Future<List<Spot>?> onSearch(String value) async {
     final apiService = ApiService();
     try {
       var response = await apiService.searchSpot(value);
@@ -63,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: AppLocalizations.of(context)!.title,
               subtitle: AppLocalizations.of(context)!.subtitle,
             ),
-            TypeAheadField<SuggestOption>(
+            TypeAheadField<Spot>(
               builder: (context, controller, focusNode) {
                 return Padding(
                   padding: const EdgeInsets.all(24),
@@ -93,13 +85,13 @@ class _HomeScreenState extends State<HomeScreen> {
               hideOnEmpty: false,
               hideOnUnfocus: true,
               hideWithKeyboard: true,
-              itemBuilder: (context, suggestOption) {
+              itemBuilder: (context, spot) {
                 return Padding(
                   padding: const EdgeInsets.only(left: 8, right: 8),
                   child: ListTile(
-                    title: Text(suggestOption.text,
+                    title: Text(spot.name,
                         style: Theme.of(context).textTheme.bodyLarge),
-                    subtitle: Text(suggestOption.source.address,
+                    subtitle: Text(spot.location!.toString(),
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary)),
                   ),
@@ -115,8 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
-              onSelected: (suggestOption) {
-                onNavigateToSpotDetailsSreen(suggestOption);
+              onSelected: (spot) {
+                onNavigateToSpotDetailsSreen(spot);
               },
               suggestionsCallback: (pattern) async {
                 return await onSearch(pattern);

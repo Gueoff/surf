@@ -141,7 +141,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(onScroll);
-    future = onGetSpotForecasts(widget.spot.id).then((_) {
+    future = onGetSpotForecasts(widget.spot.surflineUuid).then((_) {
       _scrollToDate(DateTime.now());
       return _;
     });
@@ -235,7 +235,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
       DateTime current = getCurrentTime();
       apiService.setIntervalHours(value);
 
-      future = onGetSpotForecasts(widget.spot.id).then((_) {
+      future = onGetSpotForecasts(widget.spot.surflineUuid).then((_) {
         _scrollToDate(current);
         return _;
       });

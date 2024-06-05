@@ -1,14 +1,15 @@
-import 'package:surf/src/models/location.dart';
+import 'package:surf/src/entities/location_entity.dart';
+import 'package:surf/src/models/spot.dart';
 
-class Spot {
+class SpotEntity {
   String? description;
   String image;
   String name;
-  Location? location;
+  LocationEntity? location;
   String surflineUuid;
   String uuid;
 
-  Spot({
+  SpotEntity({
     this.description,
     required this.image,
     required this.name,
@@ -17,17 +18,14 @@ class Spot {
     required this.uuid,
   });
 
-  @override
-  String toString() {
-    return 'Spot($name $uuid)';
-  }
-
-  factory Spot.fromJson(Map<String, dynamic> json) {
-    return Spot(
+  factory SpotEntity.fromJson(Map<String, dynamic> json) {
+    return SpotEntity(
       description: json['description'],
       image: json['image'],
       name: json['name'],
-      location: Location.fromJson(json['location']),
+      location: json['location'] != null
+          ? LocationEntity.fromJson(json['location'])
+          : null,
       surflineUuid: json['surflineUuid'],
       uuid: json['uuid'],
     );
@@ -38,9 +36,20 @@ class Spot {
       'description': description,
       'image': image,
       'name': name,
-      'location': location?.toJson(),
+      'location': location,
       'surflineUuid': surflineUuid,
       'uuid': uuid,
     };
+  }
+
+  Spot toSpot() {
+    return Spot(
+      description: description,
+      image: image,
+      name: name,
+      location: location?.toLocation(),
+      surflineUuid: surflineUuid,
+      uuid: uuid,
+    );
   }
 }

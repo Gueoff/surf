@@ -25,9 +25,10 @@ void main() async {
     debug: true,
   );
 
+  print('bef');
   // Load initial state
   final initialState = await persistor.load();
-
+  print('aft');
   final store = Store<AppState>(
     appReducer,
     initialState: initialState ?? AppState.initial(),

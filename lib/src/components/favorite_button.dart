@@ -45,7 +45,7 @@ class _FavoriteButtonState extends State<FavoriteButton>
       converter: (store) => SpotViewModel.fromStore(store),
       builder: (context, viewModel) {
         bool isFavorite = viewModel.spots
-            .any((spotFavorite) => spotFavorite.id == widget.spot.id);
+            .any((spotFavorite) => spotFavorite.uuid == widget.spot.uuid);
 
         return GestureDetector(
           onTap: isFavorite ? onRemoveToFavorites : onAddToFavorites,

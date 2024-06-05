@@ -38,7 +38,7 @@ class FavoriteSpotList extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(25),
                     child: Hero(
-                      tag: spot.id,
+                      tag: spot.uuid,
                       child: ShaderMask(
                         shaderCallback: (bounds) => const LinearGradient(
                           colors: [
@@ -50,7 +50,7 @@ class FavoriteSpotList extends StatelessWidget {
                         ).createShader(bounds),
                         blendMode: BlendMode.darken,
                         child: Image.network(
-                          'https://surf.leaff.me/api/image/${spot.id}.jpg',
+                          spot.image,
                           height: 300,
                           width: 200,
                           fit: BoxFit.cover,
@@ -94,7 +94,7 @@ class FavoriteSpotList extends StatelessWidget {
                                   size: 16,
                                 ),
                               ),
-                              Text(spot.address.split(',')[0],
+                              Text(spot.location?.region ?? '',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelMedium!

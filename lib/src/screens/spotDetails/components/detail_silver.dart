@@ -22,7 +22,7 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
     return Stack(
       children: [
         Hero(
-          tag: spot.id,
+          tag: spot.uuid,
           child: ShaderMask(
             shaderCallback: (bounds) => const LinearGradient(
               colors: [
@@ -34,7 +34,7 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
             ).createShader(bounds),
             blendMode: BlendMode.darken,
             child: Image.network(
-              'https://surf.leaff.me/api/image/${spot.id}.jpg',
+              spot.image,
               width: MediaQuery.of(context).size.width,
               height: expandedHeight,
               fit: BoxFit.cover,

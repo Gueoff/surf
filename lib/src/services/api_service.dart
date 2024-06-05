@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:surf/src/entities/rating_entity.dart';
-import 'package:surf/src/entities/suggest_option_entity.dart';
+import 'package:surf/src/entities/spot.entity.dart';
 import 'package:surf/src/entities/sunlight_entity.dart';
 import 'package:surf/src/entities/surf_entity.dart';
 import 'package:surf/src/entities/swell_entity.dart';
@@ -10,8 +10,8 @@ import 'package:surf/src/entities/wave_entity.dart';
 import 'package:surf/src/entities/weather_entity.dart';
 import 'package:surf/src/models/rating.dart';
 import 'package:surf/src/entities/wind_entity.dart';
+import 'package:surf/src/models/spot.dart';
 import 'package:surf/src/models/spot_weather_response.dart';
-import 'package:surf/src/models/suggest_option.dart';
 import 'package:surf/src/models/sunlight.dart';
 import 'package:surf/src/models/surf.dart';
 import 'package:surf/src/models/swell.dart';
@@ -65,33 +65,31 @@ class ApiService {
     _unitWindSpeed = value;
   }
 
-  Future<List<SuggestOption>> searchSpot(String query) async {
+  Future<List<Spot>> searchSpot(String query) async {
     final response = await http.get(Uri.parse(
-        '$endpoint/spot/search?text=$query&querySize=6&suggestionSize=6&newsSearch=true'));
+        '$endpoint/spot?query=$query&querySize=6&suggestionSize=6&newsSearch=true'));
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
+
       if (body is List && body.isNotEmpty) {
-        var suggestsDto =
-            (body.first['suggest']['spot-suggest'] as List<dynamic>).toList();
+        var spotsDto = body.toList();
 
-        var suggestsEntities =
-            suggestsDto.map((suggestDto) => SuggestEntity.fromJson(suggestDto));
+        var spotsEntities =
+            spotsDto.map((spotDto) => SpotEntity.fromJson(spotDto));
 
-        return suggestsEntities.first.options
-            .map((c) => c.toSuggestOption())
-            .toList();
+        return spotsEntities.map((spotEntity) => spotEntity.toSpot()).toList();
       }
 
       return [];
     } else {
-      throw Exception('Failed to load suggests');
+      throw Exception('Failed to load spots');
     }
   }
 
   Future<WaterTemperature> getSpotWaterTemperature(String spotId) async {
     final response = await http.get(Uri.parse(
-        '$endpoint/forecast/surf/$spotId?units[waveHeight]=${_unitHeight.name}&units[swellHeight]=${_unitHeight.name}&units[tideHeight]=${_unitHeight.name}&units[temperature]=${_unitTemperature.name}&units[windSpeed]=${_unitWindSpeed.name}&cacheEnabled=true'));
+        '$endpoint/forecast/waterTemperature/$spotId?units[waveHeight]=${_unitHeight.name}&units[swellHeight]=${_unitHeight.name}&units[tideHeight]=${_unitHeight.name}&units[temperature]=${_unitTemperature.name}&units[windSpeed]=${_unitWindSpeed.name}&cacheEnabled=true'));
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
