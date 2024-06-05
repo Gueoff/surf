@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Header extends StatelessWidget {
   final String title;
   final String? subtitle;
+  final String? icon;
 
   const Header({
     super.key,
     required this.title,
     this.subtitle,
+    this.icon,
   });
 
   @override
@@ -21,9 +24,19 @@ class Header extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.headlineLarge,
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/icon.svg',
+                    width: 36,
+                    height: 36,
+                    semanticsLabel: 'Logo',
+                  ),
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                ],
               ),
               const SizedBox(height: 4),
               if (subtitle != null)
@@ -33,11 +46,11 @@ class Header extends StatelessWidget {
                 )
             ],
           ),
-          Icon(
+          /*Icon(
             Icons.notifications,
             size: 24,
             color: Theme.of(context).colorScheme.tertiary,
-          ),
+          ),*/
         ],
       ),
     );

@@ -126,8 +126,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Text(AppLocalizations.of(context)!.favorites,
-                            style: Theme.of(context).textTheme.headlineSmall),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 4),
+                              child: Icon(
+                                Icons.bookmark_outline_outlined,
+                                color: Theme.of(context).colorScheme.tertiary,
+                                size: 20,
+                              ),
+                            ),
+                            Text(AppLocalizations.of(context)!.favorites,
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall),
+                          ],
+                        ),
                       ),
                       FavoriteSpotList(spots: viewModel.spots),
                     ]);
