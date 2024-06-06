@@ -107,6 +107,7 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
   }
 
   double titleOpacity(double shrinkOffset) {
-    return 1.0 - max(0.0, shrinkOffset) / maxExtent;
+    var offset = max(0.0, shrinkOffset) / (maxExtent - 180);
+    return 1 - offset < 0 ? 0 : 1 - offset;
   }
 }
