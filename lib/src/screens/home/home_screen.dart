@@ -110,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onSelected: (spot) {
                 onNavigateToSpotDetailsSreen(spot);
               },
+              debounceDuration: const Duration(milliseconds: 800),
               suggestionsCallback: (pattern) async {
                 return await onSearch(pattern);
               },
