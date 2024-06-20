@@ -6,12 +6,13 @@ import 'package:surf/src/models/spot.dart';
 
 class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
-
+  final void Function() onShare;
   final double roundedContainerHeight;
   final Spot spot;
 
   DetailSliverDelegate({
     required this.expandedHeight,
+    required this.onShare,
     required this.roundedContainerHeight,
     required this.spot,
   });
@@ -61,6 +62,10 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
           top: MediaQuery.of(context).padding.top + 12,
           child: FavoriteButton(spot: spot),
         ),
+        Positioned(
+            right: 24,
+            top: MediaQuery.of(context).padding.top + 12 + 48,
+            child: ButtonBlur(icon: Icons.share, onTap: onShare)),
         Positioned(
             left: 24,
             bottom: 32 + 40,

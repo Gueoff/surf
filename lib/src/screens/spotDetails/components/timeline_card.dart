@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 
 class TimelineCard extends StatelessWidget {
   final Forecast forecast;
-  final Function(Forecast) onCardTap;
+  final Function(Forecast)? onCardTap;
   final int intervalHours;
   final timeFormatter = DateFormat.Hm();
   late final DateTime dateTime;
@@ -15,7 +15,7 @@ class TimelineCard extends StatelessWidget {
   TimelineCard(
       {super.key,
       required this.forecast,
-      required this.onCardTap,
+      this.onCardTap,
       required this.intervalHours}) {
     dateTime = DateTime.fromMillisecondsSinceEpoch(forecast.timestamp * 1000);
 
@@ -37,7 +37,9 @@ class TimelineCard extends StatelessWidget {
       child: Pressable(
         borderRadius: const BorderRadius.all(Radius.circular(14)),
         onTap: () {
-          onCardTap(forecast);
+          if (onCardTap != null) {
+            onCardTap!(forecast);
+          }
         },
         child: Column(
           children: [

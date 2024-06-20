@@ -1,7 +1,11 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:surf/src/components/button_toggle.dart';
 import 'package:surf/src/components/forecast_rating_indicator.dart';
+import 'package:surf/src/components/forecast_share.dart';
 import 'package:surf/src/models/spot.dart';
 import 'package:surf/src/models/forecast.dart';
 import 'package:surf/src/models/rating.dart';
@@ -23,6 +27,8 @@ import 'package:surf/src/screens/spotDetails/components/wind_card.dart';
 import 'package:surf/src/screens/spotDetails/components/weather_card.dart';
 import 'package:surf/src/services/api_service.dart';
 import 'package:intl/intl.dart';
+import 'dart:typed_data';
+import 'package:share_plus/share_plus.dart';
 
 List<Forecast> groupEntitiesByTimestamp(
     List<Rating> ratingEntities,
@@ -122,19 +128,22 @@ class SpotDetailsScreen extends StatefulWidget {
 
 class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   Forecast? selectedForecast;
-  late ScrollController _scrollController;
-  final dateFormatter = DateFormat('E d/MM', 'fr_FR');
-  final timeFormatter = DateFormat.Hm();
-  late Future<List<Forecast>> future;
-  get offset => _scrollController.hasClients ? _scrollController.offset : 0;
-  final apiService = ApiService();
-  late List<Forecast> forecastData;
   DateTime currentDate = DateTime.now();
+  ScreenshotController screenshotController = ScreenshotController();
+  double screenWidth = 0.0;
+  int intervalHours = 3;
+  late ScrollController _scrollController;
+  late List<Forecast> forecastData;
   late WaterTemperature waterTemperature;
   late List<Tide> tides;
   late List<Sunlight> sunlights;
-  double screenWidth = 0.0;
-  int intervalHours = 3;
+  late Future<List<Forecast>> future;
+  final apiService = ApiService();
+  final GlobalKey globalKey = GlobalKey();
+  final dateFormatter = DateFormat('E d/MM', 'fr_FR');
+  final timeFormatter = DateFormat.Hm();
+
+  get offset => _scrollController.hasClients ? _scrollController.offset : 0;
 
   @override
   void initState() {
@@ -195,6 +204,26 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     setState(() {
       selectedForecast = forecast;
     });
+  }
+
+  Future<void> onShareForecast(BuildContext context) async {
+    Uint8List? image = await screenshotController.captureFromLongWidget(
+      InheritedTheme.captureAll(
+        context,
+        Material(
+          child: createForecastShare(
+              widget.spot, forecastData, tides, waterTemperature),
+        ),
+      ),
+      delay: const Duration(milliseconds: 100),
+      context: context,
+    );
+
+    final directory = await getApplicationDocumentsDirectory();
+    final imagePath = await File('${directory.path}/image.png').create();
+    await imagePath.writeAsBytes(image);
+
+    await Share.shareXFiles([XFile(imagePath.path)]);
   }
 
   // Scroll horizontal event
@@ -275,6 +304,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
           SliverPersistentHeader(
             delegate: DetailSliverDelegate(
               expandedHeight: 360,
+              onShare: () => onShareForecast(context),
               roundedContainerHeight: 40,
               spot: widget.spot,
             ),
@@ -433,6 +463,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                         TideChart(
                                           animation: _scrollController,
                                           intervalHours: intervalHours,
+                                          referenceWidth: timelineCardWidth +
+                                              separatorWidth,
                                           tides: tides,
                                         ),
                                       ],
