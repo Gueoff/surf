@@ -71,7 +71,7 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
                         .primary
                         .withOpacity(titleOpacity(shrinkOffset))))),
         Positioned(
-          top: expandedHeight - roundedContainerHeight - shrinkOffset,
+          top: expandedHeight - roundedContainerHeight - shrinkOffset + 1,
           child: Container(
             alignment: Alignment.center,
             width: MediaQuery.of(context).size.width,
