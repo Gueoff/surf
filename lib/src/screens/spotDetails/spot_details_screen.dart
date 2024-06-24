@@ -223,7 +223,16 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     final imagePath = await File('${directory.path}/image.png').create();
     await imagePath.writeAsBytes(image);
 
-    await Share.shareXFiles([XFile(imagePath.path)]);
+    print(imagePath);
+
+    await Share.shareXFiles([XFile(imagePath.path)],
+        text: 'Regarde moi ces conditions!',
+        subject: 'Conditions de surf à ${widget.spot.name}',
+        sharePositionOrigin: Rect.fromLTWH(
+            0,
+            0,
+            MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height / 2));
   }
 
   // Scroll horizontal event
