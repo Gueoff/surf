@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "554804767970",
+    "project_id": "alerte-ocean",
+    "storage_bucket": "alerte-ocean.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554804767970:android:ef75fd1ce01454ac4bc2bb",
+        "android_client_info": {
+          "package_name": "com.alerteocean"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaZHoJQ-jSWySbcyZepzhMIBE9iJbFZW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

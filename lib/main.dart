@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:surf/firebase_options.dart';
 import 'package:surf/src/redux/app_state.dart';
 import 'package:surf/src/redux/store.dart';
 import 'package:surf/src/theme/theme.dart';
@@ -13,8 +15,9 @@ import 'package:redux_persist/redux_persist.dart';
 import 'package:surf/src/utils/file.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initializeDateFormatting('fr_FR', null);
   const SystemUiOverlayStyle(statusBarColor: Color.fromRGBO(97, 216, 240, 1));
 
@@ -51,6 +54,7 @@ class App extends StatelessWidget {
     return StoreProvider<AppState>(
       store: store,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Alerte Océan',
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
