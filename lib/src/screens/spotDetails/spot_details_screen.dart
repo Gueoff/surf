@@ -223,15 +223,15 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     final imagePath = await File('${directory.path}/image.png').create();
     await imagePath.writeAsBytes(image);
 
-    print(imagePath);
-
     await Share.shareXFiles([XFile(imagePath.path)],
         text: 'Regarde moi ces conditions!',
         subject: 'Conditions de surf à ${widget.spot.name}',
         sharePositionOrigin: Rect.fromLTWH(
             0,
             0,
+            // ignore: use_build_context_synchronously
             MediaQuery.of(context).size.width,
+            // ignore: use_build_context_synchronously
             MediaQuery.of(context).size.height / 2));
   }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:surf/src/components/pressable.dart';
 import 'package:surf/src/models/spot.dart';
 import 'package:surf/src/screens/spotDetails/spot_details_screen.dart';
 
