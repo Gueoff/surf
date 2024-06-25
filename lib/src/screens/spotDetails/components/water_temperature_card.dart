@@ -62,10 +62,10 @@ class WaterTemperatureCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('${waterTemperature.min.toString()}°C',
-                          style: Theme.of(context).textTheme.bodyLarge),
+                          style: Theme.of(context).textTheme.titleSmall),
                       Text(
                         getWetsuit(),
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodyLarge,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         softWrap: false,

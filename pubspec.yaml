@@ -54,26 +54,26 @@ flutter:
   fonts:
     - family: Font-Medium
       fonts:
-        - asset: fonts/NoyhR-Medium.ttf
-        - asset: fonts/NoyhR-MediumItalic.ttf
+        - asset: fonts/Gliker-RegularSemiExpanded.ttf
+        - asset: fonts/Gliker-RegularSemiExpanded.ttf
           style: italic
     - family: Font-Regular
       fonts:
-        - asset: fonts/NoyhR-Regular.ttf
-        - asset: fonts/NoyhR-Italic.ttf
+        - asset: fonts/Gliker-Regular.ttf
+        - asset: fonts/Gliker-Regular.ttf
           style: italic
     - family: Font-SemiLight
       fonts:
-        - asset: fonts/NoyhR-SemiLight.ttf
-        - asset: fonts/NoyhR-SemiLightItalic.ttf
+        - asset: fonts/Gliker-RegularSemiCondensed.ttf
+        - asset: fonts/Gliker-RegularSemiCondensed.ttf
           style: italic
     - family: Font-Light
       fonts:
-        - asset: fonts/NoyhR-Light.ttf
-        - asset: fonts/NoyhR-LightItalic.ttf
+        - asset: fonts/Gliker-RegularCondensed.ttf
+        - asset: fonts/Gliker-RegularCondensed.ttf
           style: italic
     - family: Font-ExtraLight
       fonts:
-        - asset: fonts/NoyhR-ExtraLight.ttf
-        - asset: fonts/NoyhR-ExtraLightItalic.ttf
+        - asset: fonts/Gliker-RegularExtraCondensed.ttf
+        - asset: fonts/Gliker-RegularExtraCondensed.ttf
           style: italic

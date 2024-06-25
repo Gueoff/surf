@@ -70,7 +70,7 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
             left: 24,
             bottom: 32 + 40,
             child: Text(spot.name,
-                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                     color: Theme.of(context)
                         .colorScheme
                         .primary

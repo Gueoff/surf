@@ -61,7 +61,7 @@ class TimelineCard extends StatelessWidget {
                     const EdgeInsets.only(top: 8, right: 4, bottom: 8, left: 4),
                 child: Center(
                   child: Text(timeFormatter.format(dateTime),
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: Theme.of(context).colorScheme.onSecondary,
                           )),
                 ),

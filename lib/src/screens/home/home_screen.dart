@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(left: 24),
               child: Text(
                 AppLocalizations.of(context)!.subtitle,
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
           ),
@@ -190,8 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Text(AppLocalizations.of(context)!.favorites,
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall),
+                                style: Theme.of(context).textTheme.titleMedium),
                           ],
                         ),
                       ),

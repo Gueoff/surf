@@ -16,7 +16,7 @@ bool isMidnight(int timestamp) {
 }
 
 Widget createForecastShare(Spot spot, List<Forecast> forecasts,
-    List<Tide> tides, WaterTemperature waterTemperature) {
+    List<Tide> tides, WaterTemperature waterTemperature, double screenWidth) {
   double timelineCardWidth = 88;
   double separatorWidth = 8;
   int intervalHours = 3;
@@ -274,6 +274,7 @@ Widget createForecastShare(Spot spot, List<Forecast> forecasts,
                 offset: 120,
                 referenceWidth: timelineCardWidth + separatorWidth,
                 tides: tides,
+                screenWidth: screenWidth,
               ),
             ],
           ),

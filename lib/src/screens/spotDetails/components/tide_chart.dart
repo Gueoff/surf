@@ -50,6 +50,7 @@ class TideChartStatic extends StatefulWidget {
   final double referenceWidth;
   final double offset;
   final List<Tide> tides;
+  final double screenWidth;
 
   const TideChartStatic({
     super.key,
@@ -57,6 +58,7 @@ class TideChartStatic extends StatefulWidget {
     required this.offset,
     required this.referenceWidth,
     required this.tides,
+    required this.screenWidth,
   });
 
   @override
@@ -66,8 +68,6 @@ class TideChartStatic extends StatefulWidget {
 class _TideChartStaticState extends State<TideChartStatic> {
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.sizeOf(context).width;
-
     return SizedBox(
       height: 100,
       child: CustomPaint(
@@ -77,7 +77,7 @@ class _TideChartStaticState extends State<TideChartStatic> {
             Theme.of(context).colorScheme.tertiary,
             widget.intervalHours,
             widget.referenceWidth,
-            screenWidth),
+            widget.screenWidth),
         child: Container(),
       ),
     );
@@ -90,7 +90,7 @@ class SinePainter extends CustomPainter {
   final Color color;
   final double referenceWidth;
   final timeFormatter = DateFormat.Hm();
-  final screenWidth;
+  final double screenWidth;
   int intervalHours;
 
   SinePainter(this.offset, this.tides, this.color, this.intervalHours,
@@ -125,8 +125,8 @@ class SinePainter extends CustomPainter {
       );
       final ui.TextStyle textStyle = ui.TextStyle(
         color: color,
-        fontFamily: 'NoyhR-Light',
-        fontSize: 14,
+        fontFamily: 'Font-Regular',
+        fontSize: 12,
       );
       final ui.ParagraphBuilder paragraphBuilder =
           ui.ParagraphBuilder(paragraphStyle)..pushStyle(textStyle);

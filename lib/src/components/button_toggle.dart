@@ -35,8 +35,8 @@ class ButtonsToggle extends StatelessWidget {
         (index) => Text(
           options[index].toString(),
           style: const TextStyle(
-            fontFamily: 'NoyhR-Regular',
-            fontSize: 20,
+            fontFamily: 'Font-Regular',
+            fontSize: 16,
           ),
         ),
       ),

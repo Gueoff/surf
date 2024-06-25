@@ -37,62 +37,62 @@ class ThemeStyle {
       headlineLarge: TextStyle(
         fontFamily: 'Font-Medium',
         color: tertiary,
-        fontSize: 32,
+        fontSize: 28,
       ),
       headlineMedium: TextStyle(
         fontFamily: 'Font-Medium',
         color: tertiary,
-        fontSize: 28,
+        fontSize: 24,
       ),
       headlineSmall: TextStyle(
         fontFamily: 'Font-Medium',
         color: tertiary,
-        fontSize: 24,
+        fontSize: 20,
       ),
       titleLarge: TextStyle(
         fontFamily: 'Font-Regular',
         color: tertiary,
-        fontSize: 22,
+        fontSize: 18,
       ),
       titleMedium: TextStyle(
         fontFamily: 'Font-Regular',
         color: tertiary,
-        fontSize: 20,
+        fontSize: 16,
       ),
       titleSmall: TextStyle(
         fontFamily: 'Font-Regular',
         color: tertiary,
-        fontSize: 18,
+        fontSize: 14,
       ),
       bodyLarge: TextStyle(
         fontFamily: 'Font-SemiLight',
         color: tertiary,
-        fontSize: 16,
+        fontSize: 12,
       ),
       bodyMedium: TextStyle(
         fontFamily: 'Font-SemiLight',
         color: tertiary,
-        fontSize: 14,
+        fontSize: 10,
       ),
       bodySmall: TextStyle(
         fontFamily: 'Font-SemiLight',
         color: tertiary,
-        fontSize: 12,
+        fontSize: 8,
       ),
       labelLarge: TextStyle(
-        fontFamily: 'Font-Light',
-        color: tertiary,
-        fontSize: 16,
-      ),
-      labelMedium: TextStyle(
-        fontFamily: 'Font-Light',
-        color: tertiary,
-        fontSize: 14,
-      ),
-      labelSmall: TextStyle(
-        fontFamily: 'Font-Light',
+        fontFamily: 'Font-SemiLight',
         color: tertiary,
         fontSize: 12,
+      ),
+      labelMedium: TextStyle(
+        fontFamily: 'Font-SemiLight',
+        color: tertiary,
+        fontSize: 10,
+      ),
+      labelSmall: TextStyle(
+        fontFamily: 'Font-SemiLight',
+        color: tertiary,
+        fontSize: 8,
       ),
     ),
   );

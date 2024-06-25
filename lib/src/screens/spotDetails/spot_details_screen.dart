@@ -212,7 +212,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
         context,
         Material(
           child: createForecastShare(
-              widget.spot, forecastData, tides, waterTemperature),
+              widget.spot, forecastData, tides, waterTemperature, screenWidth),
         ),
       ),
       delay: const Duration(milliseconds: 100),
@@ -360,7 +360,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                           dateFormatter.format(currentDate),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .titleMedium),
+                                              .titleSmall),
                                     ),
                                     Expanded(
                                       flex: 1,
@@ -370,7 +370,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                                   .format(getCurrentTime()),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .titleMedium,
+                                                  .titleSmall,
                                               textAlign: TextAlign.center,
                                             )
                                           : Container(),
