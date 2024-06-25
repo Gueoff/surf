@@ -33,6 +33,7 @@ dependencies:
   screenshot: ^3.0.0
   firebase_core: ^3.1.0
   firebase_messaging: ^15.0.1
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +49,7 @@ flutter:
     - assets/images/
     - assets/icons/weather/
     - assets/icons/icon.svg
+    - assets/icons/menu.svg
 
   fonts:
     - family: NoyhR-Medium

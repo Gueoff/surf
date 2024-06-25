@@ -1,7 +1,8 @@
 import 'dart:developer';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:surf/src/components/favorite_spot_list.dart';
-import 'package:surf/src/components/header.dart';
+import 'package:surf/src/components/navbar.dart';
 import 'package:surf/src/models/spot.dart';
 import 'package:surf/src/redux/app_state.dart';
 import 'package:surf/src/redux/spot/spot_view_model.dart';
@@ -20,6 +21,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   void onNavigateToSpotDetailsSreen(Spot spot) {
     Navigator.push(
       context,
@@ -42,6 +45,59 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      endDrawerEnableOpenDragGesture: false,
+      drawer: const Navbar(),
+      appBar: AppBar(
+        centerTitle: false,
+        titleSpacing: 0,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 24),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 36,
+                height: 36,
+                child: GestureDetector(
+                  onTap: () => _scaffoldKey.currentState?.openDrawer(),
+                  child: SvgPicture.asset(
+                    'assets/icons/menu.svg',
+                    width: 36,
+                    height: 36,
+                    semanticsLabel: 'Menu',
+                    colorFilter: ColorFilter.mode(
+                      Theme.of(context).colorScheme.tertiary,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                AppLocalizations.of(context)!.title,
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+            ],
+          ),
+        ),
+        bottom: PreferredSize(
+          preferredSize: Size.zero,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24),
+              child: Text(
+                AppLocalizations.of(context)!.subtitle,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ),
+          ),
+        ),
+        toolbarHeight: 70,
+      ),
       backgroundColor: Colors.white,
       body: GestureDetector(
         onTap: () {
@@ -51,10 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Header(
-              title: AppLocalizations.of(context)!.title,
-              subtitle: AppLocalizations.of(context)!.subtitle,
-            ),
             TypeAheadField<Spot>(
               builder: (context, controller, focusNode) {
                 return Padding(

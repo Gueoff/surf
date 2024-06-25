@@ -11,5 +11,8 @@
     "favorites": "My favorites spots",
     "noResult": "No result",
     "spots": "Surf spots",
-    "gusts": "Gusts at {value}"
+    "gusts": "Gusts at {value}",
+    "termsOfUse": "Terms of use",
+    "legalNotices": "Legal notices",
+    "privacyPolicy": "Privacy policy"
 }

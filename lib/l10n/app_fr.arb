@@ -11,5 +11,8 @@
     "favorites": "Mes spots favoris",
     "noResult": "Pas de résultat",
     "spots": "Spot de surf",
-    "gusts": "Rafales à {value}"
+    "gusts": "Rafales à {value}",
+    "termsOfUse": "CGU",
+    "legalNotices": "Mentions légales",
+    "privacyPolicy": "Politique de confidentialité"
 }
