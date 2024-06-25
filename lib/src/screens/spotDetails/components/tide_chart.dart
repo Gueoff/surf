@@ -23,6 +23,8 @@ class TideChart extends StatefulWidget {
 class _TideChartState extends State<TideChart> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.sizeOf(context).width;
+
     return SizedBox(
       height: 100,
       child: AnimatedBuilder(
@@ -34,7 +36,8 @@ class _TideChartState extends State<TideChart> {
                   widget.tides,
                   Theme.of(context).colorScheme.tertiary,
                   widget.intervalHours,
-                  widget.referenceWidth),
+                  widget.referenceWidth,
+                  screenWidth),
               child: Container(),
             );
           }),
@@ -63,6 +66,8 @@ class TideChartStatic extends StatefulWidget {
 class _TideChartStaticState extends State<TideChartStatic> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.sizeOf(context).width;
+
     return SizedBox(
       height: 100,
       child: CustomPaint(
@@ -71,7 +76,8 @@ class _TideChartStaticState extends State<TideChartStatic> {
             widget.tides,
             Theme.of(context).colorScheme.tertiary,
             widget.intervalHours,
-            widget.referenceWidth),
+            widget.referenceWidth,
+            screenWidth),
         child: Container(),
       ),
     );
@@ -84,11 +90,11 @@ class SinePainter extends CustomPainter {
   final Color color;
   final double referenceWidth;
   final timeFormatter = DateFormat.Hm();
-  int screenWidth = 411;
+  final screenWidth;
   int intervalHours;
 
   SinePainter(this.offset, this.tides, this.color, this.intervalHours,
-      this.referenceWidth);
+      this.referenceWidth, this.screenWidth);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -128,9 +134,7 @@ class SinePainter extends CustomPainter {
       ui.Paragraph paragraph = paragraphBuilder.build();
       paragraph.layout(ui.ParagraphConstraints(width: size.width));
 
-      // double cardWidth = timelineCardWidth + separatorWidth;
       double screenOffset = screenWidth / 2;
-
       double x = screenOffset +
           (dateOffset * referenceWidth / (intervalHours * 60)) -
           offset -

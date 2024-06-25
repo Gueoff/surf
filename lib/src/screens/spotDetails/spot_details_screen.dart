@@ -239,11 +239,10 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   onScroll() {
     final itemWidth = timelineCardWidth + separatorWidth;
     final middlePosition = _scrollController.offset + separatorWidth / 2;
-
     int index = (middlePosition / itemWidth).floor();
-    final forecast = forecastData[index];
 
     if (index >= 0 && index < forecastData.length) {
+      final forecast = forecastData[index];
       setState(() {
         selectedForecast = forecast;
         currentDate =
