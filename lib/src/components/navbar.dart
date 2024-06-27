@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:surf/src/screens/webview/webview_screen.dart';
 
 class Navbar extends StatelessWidget {
   const Navbar({
     super.key,
   });
 
-  void _launchURL(String url) async {
-    Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    }
+  void onNavigate(BuildContext context, String url, String title) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => WebviewScreen(url: url, title: title),
+      ),
+    );
   }
 
   @override
@@ -47,7 +48,10 @@ class Navbar extends StatelessWidget {
           ),
           ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-            onTap: () => _launchURL('https://surf.leaff.me/legal-notices.html'),
+            onTap: () => onNavigate(
+                context,
+                'https://surf.leaff.me/legal-notices.html',
+                AppLocalizations.of(context)!.legalNotices),
             title: Text(
               AppLocalizations.of(context)!.legalNotices,
               style: Theme.of(context).textTheme.bodyLarge,
@@ -55,7 +59,10 @@ class Navbar extends StatelessWidget {
           ),
           ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-            onTap: () => _launchURL('https://surf.leaff.me/terms-of-use.html'),
+            onTap: () => onNavigate(
+                context,
+                'https://surf.leaff.me/terms-of-use.html',
+                AppLocalizations.of(context)!.termsOfUse),
             title: Text(
               AppLocalizations.of(context)!.termsOfUse,
               style: Theme.of(context).textTheme.bodyLarge,
@@ -63,8 +70,10 @@ class Navbar extends StatelessWidget {
           ),
           ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-            onTap: () =>
-                _launchURL('https://surf.leaff.me/privacy-policy.html'),
+            onTap: () => onNavigate(
+                context,
+                'https://surf.leaff.me/privacy-policy.html',
+                AppLocalizations.of(context)!.privacyPolicy),
             title: Text(
               AppLocalizations.of(context)!.privacyPolicy,
               style: Theme.of(context).textTheme.bodyLarge,
